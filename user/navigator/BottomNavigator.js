@@ -3,16 +3,15 @@ import {Image,StyleSheet, Alert} from 'react-native'
 
 import {createAppContainer} from 'react-navigation'
 import {createBottomTabNavigator,BottomTabBar} from 'react-navigation-tabs'
-import NodeDetailScreen from '../pages/NodeDetail'
-import NodeHistoryScreen from '../pages/NodeHistory'
-import NodeManageScreen from '../pages/NodeManage'
-import UserScreen from '../pages/UserInfo'
+import NodeDetailScreen from '../pages/nodedetail/NodeDetail'
+import NodeManageScreen from '../pages/nodemanage/NodeManage'
+import UserInfoRootStack from '../pages/userinfo/UserInfoContainer'
 
 //父导航器配置信息
 const TabNavigatorConfig={
     //子路由
     UserScreen:{
-        screen:UserScreen,
+        screen:UserInfoRootStack,
         navigationOptions:{
             //配置子路由详细信息
             tabBarLabel:'用户信息',
@@ -42,16 +41,6 @@ const TabNavigatorConfig={
             }
         }
     },
-    NodeHistoryScreen:{
-        screen:NodeHistoryScreen,
-        navigationOptions:{
-            tabBarLabel:'节点历史信息',
-            tabBarIcon:({focused})=>{
-                if(!focused) return <Image source={require('../assets/icon/NodeHistory.png')} style={styles.bottomTabIconStyle}/>
-                else return <Image source={require('../assets/icon/NodeHistorySelected.png')} style={styles.bottomTabIconStyle}/>
-            }
-        }
-    }
 }
 
 class BottomNavigator extends React.Component{
@@ -61,13 +50,14 @@ class BottomNavigator extends React.Component{
             //参数1:父导航器自定义配置
             //参数2:默认导航器
             TabNavigatorConfig,{
-                tabBarComponent: props => (<BottomTabBar {...props} />)
+                tabBarComponent: props => (<BottomTabBar {...props} />),
+                initialRouteName:"UserScreen"
             }
         ))
         return <BottomNavigator/>
     }
 }
-
+//底部导航器不仅包括了导航条，还包括了各个页面的根堆栈
 export default BottomNavigator
 
 const styles=StyleSheet.create({
