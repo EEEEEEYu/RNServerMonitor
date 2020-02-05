@@ -4,14 +4,9 @@ import {
   LayoutAnimation,
   StyleSheet,
   View,
+  ART
 } from 'react-native';
 
-import {
-  Group,
-  Path,
-  Surface,
-  Shape
-} from '@react-native-community/art'
 
 
 export default class Line extends Component {
@@ -20,7 +15,7 @@ export default class Line extends Component {
     values: Array<number>,
     fillColor: string,
     strokeColor: string,
-    strokeWidth: number,
+    strokeWidth: number
   };
 
   static defaultProps = {
@@ -129,16 +124,16 @@ export default class Line extends Component {
         style={styles.container}
         onLayout={this.onLayout}
       >
-        <Surface width={width} height={height}>
-          <Group x={0} y={height}>
-            <Shape
+        <ART.Surface width={width} height={height}>
+          <ART.Group x={0} y={height}>
+            <ART.Shape
               d={this.buildPath(values)}
               fill={fillColor}
               stroke={strokeColor}
               strokeWidth={strokeWidth}
             />
-          </Group>
-        </Surface>
+          </ART.Group>
+        </ART.Surface>
       </View>
     );
   }

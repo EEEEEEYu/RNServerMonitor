@@ -17,7 +17,7 @@ export default class UserScreen extends React.Component{
       <SafeAreaView style={styles.SafeAreaViewStyle}>
         <View style={styles.BackGroundImage}></View>
         <UserName username="用户名(可能加入头像)"/>
-        <View style={styles.ViewStyle}>
+        <View style={styles.ButtonView}>
           <UserOptionsButton 
             fixedText="已绑定邮箱:" 
             pressEvent={()=>{this.props.navigation.navigate("UserBindMail")}}
@@ -28,7 +28,7 @@ export default class UserScreen extends React.Component{
           />
         </View>
 
-        <View style={styles.ViewStyle}>
+        <View style={styles.ButtonView}>
           <UserOptionsButton fixedText="上次登录时间:"/><UserOptionsButton fixedText="退出登录"/>
         </View>
       </SafeAreaView>
@@ -40,9 +40,10 @@ const styles=StyleSheet.create({
   SafeAreaViewStyle:{
     flexDirection:"column"
   },
-  ViewStyle:{
+  ButtonView:{
     flexDirection:'row',
-    justifyContent:"center"
+    justifyContent:'space-evenly',
+    marginTop:10
   },
   BackGroundImage:{
     height:200,

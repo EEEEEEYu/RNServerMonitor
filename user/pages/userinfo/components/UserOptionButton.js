@@ -27,12 +27,12 @@ export default class UserOptionsButton extends React.Component{
 
 const styles=StyleSheet.create({
   outerbox:{
-    width:Dimensions.get('window').width/2,
-    height:Dimensions.get('window').width/4,
+    width:Dimensions.get('window').width/2*0.8,
+    height:Dimensions.get('window').width/6,
     alignItems:'center',
     backgroundColor:'darkgray',
     justifyContent:'center',
-    borderColor:'white',
+    borderRadius:20,
     borderWidth:1
   },
   font:{
