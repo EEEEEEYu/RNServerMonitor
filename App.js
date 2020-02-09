@@ -1,35 +1,19 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow
- */
-
-import React from 'react';
-import BottomNavigator from './user/navigator/BottomNavigator';
-import {
-  SafeAreaView,
-  StyleSheet,
-  ScrollView,
-  View,
-  Text,
-  StatusBar,
-} from 'react-native';
-
-import {
-  Header,
-  LearnMoreLinks,
-  Colors,
-  DebugInstructions,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
-
-const App: () => React$Node = () => {
-  return (
-    <BottomNavigator/>
-  );
-};
+import React from 'react'
+import {View,SafeAreaView,Text} from 'react-native'
+import {createStackNavigator} from 'react-navigation-stack'
+import {createAppContainer} from 'react-navigation'
+import LoginPage from './pages/Login/LoginPage'
+import RegisterPage from './pages/Register/RegisterPage'
+import DrawerNavigator from './pages/DrawerNavigator/DrawerNavigator'
 
 
-export default App;
+const RootStack =createStackNavigator({
+    LoginPage:LoginPage,
+    RegisterPage:RegisterPage,
+    DrawerNavigator:DrawerNavigator
+},{
+    initialRouteName:'LoginPage',
+    headerMode:'none'
+})
+
+export default App=createAppContainer(RootStack)
