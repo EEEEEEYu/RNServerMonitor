@@ -4,14 +4,27 @@ import {
   Text,
   Button
 } from 'react-native'
+import Swiper from 'react-native-swiper'
 
 export default class ShowCharts extends React.Component{
   render(){
     return(
-      <View style={{flex:1,alignItems:'center',justifyContent:'center'}}>
-        <Text>图表显示区域</Text>
-        <Button title="返回" onPress={()=>this.props.navigation.goBack()}/>
-      </View>
+      <Swiper>
+        <View>
+          <Text>page1</Text>
+          <Button title="返回" onPress={()=>this.props.navigation.goBack()}/>
+        </View>
+
+        <View>
+          <Text>page2</Text>
+          <Button title="返回" onPress={()=>this.props.navigation.goBack()}/>
+        </View>
+
+        <View>
+          <Text>page3</Text>
+          <Button title="返回" onPress={()=>this.props.navigation.goBack()}/>
+        </View>
+      </Swiper>
     )
   }
 }
