@@ -52,23 +52,6 @@ export default class LoginPage extends React.Component{
         console.log(response);
         this.props.navigation.navigate("DrawerNavigator")
       })
-
-
-      //const password=this._getDataLogin('@UserPassword:0')
-
-      /*
-      if(phone===this.state.EmailOrPhone){
-        if(password===this.state.password){
-          Alert.alert('登录成功!欢迎'+this._getDataLogin('@UserName:0'));
-          this.props.navigation.navigate("DrawerNavigator")
-        }
-        else{
-          Alert.alert('密码错误!')
-        }
-      }
-      else{
-        Alert.alert('该用户不存在!')
-      }*/
     }
   }
 
