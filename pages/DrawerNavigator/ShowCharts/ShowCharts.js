@@ -5,15 +5,13 @@ import {
   Button
 } from 'react-native'
 import Swiper from 'react-native-swiper'
+import CPUPage from './CPU/CPUPage'
 
 export default class ShowCharts extends React.Component{
   render(){
     return(
       <Swiper>
-        <View>
-          <Text>page1</Text>
-          <Button title="返回" onPress={()=>this.props.navigation.goBack()}/>
-        </View>
+        <CPUPage {...this.props}/>
 
         <View>
           <Text>page2</Text>

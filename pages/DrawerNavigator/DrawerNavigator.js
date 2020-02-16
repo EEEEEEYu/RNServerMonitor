@@ -60,7 +60,8 @@ export default class DrawerNavigator extends React.Component{
             <View style={{flexDirection:'row',justifyContent:'center'}}>
               <Text>通过应用提醒</Text>
               <Switch value={this.state.switchon3} onValueChange={()=>{this.setState({switchon3:!this.state.switchon3})}}/>
-            </View>
+            </View> 
+            <DrawerItem label="退出登录" style={{backgroundColor:"red"}}/>
             
 
           </DrawerContentScrollView> 

@@ -49,7 +49,6 @@ export default class LoginPage extends React.Component{
       const arr=['@UserName:'+this.state.EmailOrPhone,'@UserPassword:'+this.state.EmailOrPhone]
       this._getDataLogin(arr)
       .then((response)=>{
-        console.log(response);
         this.props.navigation.navigate("DrawerNavigator")
       })
     }
