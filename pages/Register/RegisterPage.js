@@ -17,7 +17,51 @@ import { TextInput } from 'react-native-gesture-handler'
 export default class RegisterPage extends React.Component{
 
   state={
-    Switch:false
+    UserName:null,
+    UserEmail:null,
+    UserPassword:null,
+    UserConfirmPassword:null,
+    UserAuthority:false
+  }
+
+  _register=()=>{
+    if(this.state.UserName==null){
+      Alert.alert('用户名不能为空！')
+    }
+    else if(this.state.UserEmail==null){
+      Alert.alert('用户邮箱不能为空！')
+    }
+    else if(this.state.UserPassword==null){
+      Alert.alert('密码不能为空！')
+    }
+    else if(this.state.UserConfirmPassword==null){
+      Alert.alert('确认密码不能为空！')
+    }
+    else if(this.state.UserPassword!=this.state.UserConfirmPassword){
+      Alert.alert('两次输入的密码不一致！')
+    }
+    else{
+      fetch('http://192.168.1.4:5000/RegisterUser',{
+        method:'POST',
+        headers:{
+          Accept:'application/json',
+          'Content-Type':'application/json'
+        },
+        body:JSON.stringify({
+          UserName:this.state.UserName,
+          UserEmail:this.state.UserEmail,
+          UserPassword:this.state.UserPassword,
+          UserAuthority:this.state.UserAuthority
+        })
+      })
+      .then((response)=>response.json())
+      .then((responseJSON)=>{
+        console.log(responseJSON)
+      })
+      .catch((error)=>{
+        console.log(error)
+      })
+    }
   }
 
   render(){
@@ -39,7 +83,7 @@ export default class RegisterPage extends React.Component{
                 style={styles.textInput}
                 onChangeText={(text)=>{
                   this.setState({
-                    EmailOrPhone:text
+                    UserName:text
                   })
                 }}
               />
@@ -52,7 +96,7 @@ export default class RegisterPage extends React.Component{
                 style={styles.textInput}
                 onChangeText={(text)=>{
                   this.setState({
-                    EmailOrPhone:text
+                    UserEmail:text
                   })
                 }}
               />
@@ -65,7 +109,7 @@ export default class RegisterPage extends React.Component{
                 style={styles.textInput}
                 onChangeText={(text)=>{
                   this.setState({
-                    EmailOrPhone:text
+                    UserPassword:text
                   })
                 }}
               />
@@ -77,7 +121,7 @@ export default class RegisterPage extends React.Component{
                 style={styles.textInput}
                 onChangeText={(text)=>{
                   this.setState({
-                    EmailOrPhone:text
+                    UserConfirmPassword:text
                   })
                 }}
               />
@@ -85,8 +129,8 @@ export default class RegisterPage extends React.Component{
 
             <View style={styles.switchView}>
               <Switch 
-                value={this.state.Switch} 
-                onChange={()=>{this.setState({Switch:!this.state.Switch})}}
+                value={this.state.UserAuthority} 
+                onChange={()=>{this.setState({UserAuthority:!this.state.UserAuthority})}}
                 style={styles.switch}
                 //trackColor={{false:'black',true:'red'}}
               />
@@ -106,7 +150,7 @@ export default class RegisterPage extends React.Component{
 
             {/*包裹注册按钮区域的View*/}
             <View style={styles.buttonView}>
-              <TouchableOpacity onPress={()=>{Alert.alert("点击了注册按钮")}}>
+              <TouchableOpacity onPress={this._register}>
                 <Text style={styles.buttonText}>注 册</Text>
               </TouchableOpacity>
             </View>

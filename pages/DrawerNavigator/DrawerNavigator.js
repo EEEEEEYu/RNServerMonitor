@@ -39,9 +39,9 @@ export default class DrawerNavigator extends React.Component{
   render(){
     return(
       <NavigationContainer>
-        <Drawer.Navigator 
+        <Drawer.Navigator
+           
           initialRouteName='NodeManage'
-
           drawerContent={(props)=>
           <DrawerContentScrollView {...props}>
             <DrawerItem label="用户名"/>
