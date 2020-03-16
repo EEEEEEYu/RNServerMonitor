@@ -7,113 +7,167 @@ import {
   StyleSheet,
   View,
   Dimensions,
-  Alert
+  Alert,
+  ImageBackground,
+  TouchableOpacity
 } from 'react-native'
 import { TextInput } from 'react-native-gesture-handler'
 
 
 export default class LoginPage extends React.Component{
+
   state={
-    EmailOrPhone:null,
-    Password:null,
-    show1:null,
-    show2:null
+    UserEmail:null,
+    UserPassword:null
   }
-
-
-  _getDataLogin=async (KeyArray)=>{
-    try{
-      const value=await AsyncStorage.multiGet(KeyArray);
-      if(value!==null){
-        console.log('获取成功')
-        return value
-      }
-      else{
-        console.log('获取失败0')
-        return null
-      }
-    }
-    catch(error){
-      console.log('获取失败1')
-    }
-  }
-
+  
+  //首先验证输入是否正确
   _login=()=>{
-    if(this.state.EmailOrPhone==null){
-      Alert.alert('邮箱或手机不能为空!')
+    if(this.state.UserEmail==null){
+      Alert.alert('邮箱不能为空！')
     }
-    else if(this.state.Password==null){
-      Alert.alert('密码不能为空!')
+    else if(this.state.UserPassword==null){
+      Alert.alert('密码不能为空！')
     }
     else{
-      const arr=['@UserName:'+this.state.EmailOrPhone,'@UserPassword:'+this.state.EmailOrPhone]
-      this._getDataLogin(arr)
-      .then((response)=>{
-        this.props.navigation.navigate("DrawerNavigator")
+      fetch('http://192.168.1.4:5000/Login',{
+        method:'POST',
+        headers:{
+          Accept:'application/json',
+          'Content-Type':'application/json'
+        },
+        body:JSON.stringify({
+          UserEmail:this.state.UserEmail,
+          UserPassword:this.state.UserPassword
+        })
+      })
+      .then((response)=>response.json())
+      .then((responseJSON)=>{
+        if(responseJSON.status==false){
+          Alert.alert('用户名或密码错误！')
+        }
+        else{
+          
+        }
+      })
+      .catch((error)=>{
+        Alert.alert(error)
       })
     }
   }
 
   render(){
     return(
-      <SafeAreaView>
-        <Text>登录页面</Text>
+      <ImageBackground 
+            source={require('./../../assets/BackgroundImages/Login/LoggingBackground.jpg')}
+            style={styles.backgroundImage}
+      >
+        {/*包裹整个输入区域的View*/}
+        <SafeAreaView style={styles.allInputOuterlayer}>
 
-        <View>
-          <View style={styles.InputView}>
-            <Text>邮箱/手机号</Text>
-            <TextInput 
-              style={styles.textInput}
-              onChangeText={(text)=>{
-                this.setState({
-                  EmailOrPhone:text
-                })
-              }}
-            />
+          {/*包裹输入邮箱密码区域的View*/}
+          <View style={styles.inputOuterlayer}>
+
+            {/*包裹邮箱区域的View*/}
+            <View style={styles.inputView}>
+              <Text style={styles.inputNotification}>邮箱</Text>
+              <TextInput 
+                style={styles.textInput}
+                onChangeText={(text)=>{
+                  this.setState({
+                    UserEmail:text
+                  })
+                }}
+              />
+            </View>
+            {/*包裹密码区域的View*/}
+            <View style={styles.inputView}>
+              <Text style={styles.inputNotification}>密码</Text>
+              <TextInput 
+                style={styles.textInput}
+                onChangeText={(text)=>{
+                  this.setState({
+                    UserPassword:text
+                  })
+                }}
+              />
+            </View>
+            
           </View>
-          <View style={styles.InputView}>
-            <Text>密码</Text>
-            <TextInput 
-              style={styles.textInput}
-              onChangeText={(text)=>{
-                this.setState({
-                  Password:text
-                })
-              }}
-            />
+
+          {/*包裹按钮区域的View*/}
+          <View style={styles.buttonOuterlayer}>
+             {/*包裹登录按钮区域的View*/}
+            <View style={styles.buttonView}>
+              <TouchableOpacity onPress={()=>this.props.navigation.navigate("RegisterPage")}>
+                <Text style={styles.buttonText}>注 册</Text>
+              </TouchableOpacity>
+            </View>
+
+            {/*包裹注册按钮区域的View*/}
+            <View style={styles.buttonView}>
+              <TouchableOpacity onPress={()=>{Alert.alert("点击了登录按钮")}}>
+                <Text style={styles.buttonText}>登 录</Text>
+              </TouchableOpacity>
+            </View>
           </View>
-        </View>
-
-
-        <View style={styles.buttonView}>
-          <Button title="登录" onPress={()=>this._login()}/>
-          <Button title="注册" onPress={()=>this.props.navigation.navigate("RegisterPage")}/>
-        </View>
-        <Text>{this.state.EmailOrPhone}</Text>
-        <Text>{this.state.Password}</Text>
-        <Text>{this.state.show1}</Text>
-        <Text>{this.state.show2}</Text>
-      </SafeAreaView>
+        </SafeAreaView>
+      </ImageBackground>
     )
   }
 }
 
 const styles=StyleSheet.create({
+  
+  inputOuterlayer:{
+    flexDirection:'column',
+    justifyContent:'center',
+    height:220,
+    paddingBottom:50
+  },
   inputView:{
     flexDirection:'row',
     justifyContent:'center',
-    alignItems:'center'
+    alignItems:'center',
+    padding:20
   },
-  
+  inputNotification:{
+    fontSize:20,
+    padding:8,
+    color:'white'
+  },
+  buttonOuterlayer:{
+    flexDirection:'row',
+    justifyContent:'space-around'
+  },
   buttonView:{
-    flexDirection:'column',
-    justifyContent:'center'
+    borderColor:'white',
+    borderWidth:1,
+    justifyContent:'center',
+    paddingHorizontal:20
+  },
+  buttonText:{
+    fontSize:18,
+    color:'white',
+    paddingVertical:8,
+    paddingHorizontal:20
   },
   textInput:{
-    width:Dimensions.get("window").width*2/3,
+    width:300,
     height:35,
-    borderColor:'black',
-    borderWidth:1
+    borderColor:'white',
+    borderWidth:2,
+    borderRadius:10
+  },
+  allInputOuterlayer:{
+    justifyContent:'center',
+    flexDirection:'column',
+    height:Dimensions.get('window').height/2
+  },
+  backgroundImage:{
+    flex:1,
+    flexDirection:'column',
+    justifyContent:'center'
   }
 
 })
