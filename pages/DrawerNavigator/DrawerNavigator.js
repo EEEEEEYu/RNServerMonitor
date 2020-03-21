@@ -3,7 +3,9 @@ import {
   Button, 
   View,
   Text,
-  CheckBox
+  CheckBox,
+  StyleSheet,
+  TouchableOpacity
 } from 'react-native';
 import { createDrawerNavigator, DrawerContentScrollView, DrawerItemList, DrawerItem } from '@react-navigation/drawer';
 import { NavigationContainer} from '@react-navigation/native'
@@ -15,26 +17,14 @@ import { Switch } from 'react-native-gesture-handler';
 
 const Drawer=createDrawerNavigator();
 
-function CustomDrawerContent(props){
-  return (
-    <DrawerContentScrollView {...props}>
-            <DrawerItemList {...props}/>
-            <Switch value={this.state.switchon} onValueChange={()=>{
-              this.setState({
-                switchon:!this.state.switchon
-              })
-            }}/>
-  </DrawerContentScrollView> 
-  )
-}
 
 export default class DrawerNavigator extends React.Component{
 
   state={
-    switchon1:false,
     switchon2:false,
     switchon3:false
   }
+
   
   render(){
     return(
@@ -44,24 +34,28 @@ export default class DrawerNavigator extends React.Component{
           initialRouteName='NodeManage'
           drawerContent={(props)=>
           <DrawerContentScrollView {...props}>
-            <DrawerItem label="用户名"/>
-            <DrawerItem label="已绑定手机:" onPress={()=>props.navigation.navigate("BindPhone")}/>
-            <DrawerItem label="已绑定邮箱:" onPress={()=>props.navigation.navigate("BindMail")}/>
-            <View style={{flexDirection:'row',justifyContent:'center'}}>
-              <Text>通过短信提醒</Text>
-              <Switch value={this.state.switchon1} onValueChange={()=>{this.setState({switchon1:!this.state.switchon1})}}/>
-            </View>
+            {/*用户名标签*/}
+            <DrawerItem label="用户名" labelStyle={styles.labels}/>
 
-            <View style={{flexDirection:'row',justifyContent:'center'}}> 
-              <Text>通过邮箱提醒</Text>
+
+            <TouchableOpacity style={styles.mailOuterLayer}>
+              <Text style={styles.mailText}>已绑定邮箱:</Text>
+              <Text style={styles.mailText}>未绑定</Text>
+            </TouchableOpacity>
+
+            <View style={styles.switchOuterLayer}> 
+              <Text style={styles.switchText}>邮箱通知</Text>
               <Switch value={this.state.switchon2} onValueChange={()=>{this.setState({switchon2:!this.state.switchon2})}}/>
             </View>
 
-            <View style={{flexDirection:'row',justifyContent:'center'}}>
-              <Text>通过应用提醒</Text>
+            <View style={styles.switchOuterLayer}>
+              <Text style={styles.switchText}>应用通知</Text>
               <Switch value={this.state.switchon3} onValueChange={()=>{this.setState({switchon3:!this.state.switchon3})}}/>
             </View> 
-            <DrawerItem label="退出登录" style={{backgroundColor:"red"}}/>
+
+            <TouchableOpacity style={styles.logoutOuterLayer}>
+              <Text style={styles.logoutText}>退出登录</Text>
+            </TouchableOpacity>
             
 
           </DrawerContentScrollView> 
@@ -90,3 +84,39 @@ export default class DrawerNavigator extends React.Component{
     )
   }
 }
+
+
+const styles=StyleSheet.create({
+  labels:{
+    fontSize:20
+  },
+  mailOuterLayer:{
+    flexDirection:'row',
+    justifyContent:'flex-start'
+  },
+  mailText:{
+    fontSize:20,
+    paddingVertical:20,
+    paddingLeft:15
+  },
+  switchText:{
+    fontSize:20,
+    paddingLeft:15,
+    paddingVertical:20
+  },
+  switchOuterLayer:{
+    flexDirection:'row',
+    justifyContent:'space-around'
+  },
+  logoutOuterLayer:{
+    backgroundColor:'red',
+    justifyContent:'center',
+    alignItems:'center',
+    borderRadius:10
+  },
+  logoutText:{
+    color:'white',
+    fontSize:20,
+    paddingVertical:15
+  }
+})

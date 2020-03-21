@@ -76,34 +76,7 @@ export default class LoginPage extends React.Component{
 
   //首先验证输入是否正确
   _testlogin=()=>{
-    if(this.state.UserEmail==null){
-      Alert.alert('邮箱不能为空！')
-    }
-    else if(this.state.UserPassword==null){
-      Alert.alert('密码不能为空！')
-    }
-    else{
-      fetch('http://192.168.1.4:5000/Login',{
-        method:'POST',
-        headers:{
-          Accept:'application/json',
-          'Content-Type':'application/json'
-        },
-        body:JSON.stringify({
-          UserEmail:this.state.UserEmail,
-          UserPassword:this.state.UserPassword
-        })
-      })
-      //将响应转化为json
-      .then((response)=>response.json())
-      //对响应json进行处理
-      .then((responseJSON)=>{
-        console.log(responseJSON)
-      })
-      .catch((error)=>{
-        Alert.alert(error)
-      })
-    }
+    this.props.navigation.navigate('DrawerNavigator')
   }
 
 
@@ -157,7 +130,7 @@ export default class LoginPage extends React.Component{
 
             {/*包裹注册按钮区域的View*/}
             <View style={styles.buttonView}>
-              <TouchableOpacity onPress={this._login}>
+              <TouchableOpacity onPress={this._testlogin}>
                 <Text style={styles.buttonText}>登 录</Text>
               </TouchableOpacity>
             </View>

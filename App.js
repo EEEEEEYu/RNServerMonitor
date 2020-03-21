@@ -1,4 +1,6 @@
 import React from 'react'
+import 'react-native-gesture-handler'
+import 'react-native-gesture-handler/Swipeable'
 import {AsyncStorage} from 'react-native'
 import {createAppContainer} from 'react-navigation'
 import {createStackNavigator} from 'react-navigation-stack'
