@@ -65,7 +65,10 @@ export default class LoginPage extends React.Component{
               UserNode:responseJSON['Nodes']
             }
           })
-          .then(()=>{this.props.navigation.navigate('DrawerNavigator')})
+          .then(()=>{
+            this.setState({UserEmail:null,UserPassword:null})
+            this.props.navigation.navigate('DrawerNavigator')
+          })
         }
       })
       .catch((error)=>{
@@ -123,7 +126,10 @@ export default class LoginPage extends React.Component{
           <View style={styles.buttonOuterlayer}>
              {/*包裹登录按钮区域的View*/}
             <View style={styles.buttonView}>
-              <TouchableOpacity onPress={()=>this.props.navigation.navigate("RegisterPage")}>
+              <TouchableOpacity onPress={()=>{
+                this.setState({UserEmail:null,UserPassword:null})
+                this.props.navigation.navigate("RegisterPage")
+              }}>
                 <Text style={styles.buttonText}>注 册</Text>
               </TouchableOpacity>
             </View>
