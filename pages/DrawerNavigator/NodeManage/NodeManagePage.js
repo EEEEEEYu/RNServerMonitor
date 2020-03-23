@@ -367,11 +367,11 @@ export default class NodeManagePage extends React.Component{
         {/*底部菜单组件*/}
         <View style={styles.settingListButtonView }>
             <TouchableOpacity style={styles.bottomButton} onPress={()=>{this._setModalVisible(true)}}>
-              <Icon name="ios-add-circle-outline" size={50} color='white'/>
+              <Icon name="ios-add" size={50} color='black'/>
             </TouchableOpacity>
 
             <TouchableOpacity style={styles.bottomButton} onPress={this._reverseSettingOpen}>
-              <Icon name="ios-settings" size={50} color='white'/>
+              <Icon name="ios-settings" size={50} color='black'/>
             </TouchableOpacity>
         </View>
 
@@ -417,9 +417,9 @@ const styles=StyleSheet.create({
   bottomButton:{
     height:Dimensions.get('window').width/7,
     width:Dimensions.get('window').width/7,
-    backgroundColor:'gray',
-    borderColor:'gray',
-    borderWidth:1,
+    backgroundColor:'white',
+    borderColor:'black',
+    borderWidth:2,
     borderRadius:Dimensions.get('window').width/14,
     flexDirection:'column',
     justifyContent:'center',
