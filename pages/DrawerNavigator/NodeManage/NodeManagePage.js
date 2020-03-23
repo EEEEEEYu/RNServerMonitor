@@ -18,106 +18,116 @@ import Feather from 'react-native-vector-icons/Feather'
 import Entypo from 'react-native-vector-icons/Entypo'
 
 
-/*底部菜单栏的子组件*/
-class SettingList extends React.Component{
-  render(){
-    if(this.props.open){
-      return(
-        <View style={styles.settingListButtonView}>
-          <TouchableOpacity style={styles.bottomButton} onPress={()=>{this.props._setModalVisible(true)}}>
-              <Icon name="ios-add-circle-outline" size={50} color='white'/>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.bottomButton}>
-              <Feather name="edit" size={40} color='white'/>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.bottomButton} onPress={()=>{this.props._setSettingListOpen(false)}}>
-              <Icon name="ios-settings" size={50} color='white'/>
-          </TouchableOpacity>
-        </View>
-      )
-    }
-    else{
-      return(
-        <View style={styles.bottomButtonView }>
-            <TouchableOpacity style={styles.bottomButton} onPress={()=>{this.props._setSettingListOpen(true)}}>
-              <Icon name="ios-settings" size={50} color='white'/>
-            </TouchableOpacity>
-        </View>
-      )
-    }
-  }
-
-}
-
 
 export default class NodeManagePage extends React.Component{
 
   state={
+    //添加状态码，0代表和节点正常通信，1代表手机未联网，2代表对应节点异常
     nodes:[
       {
+        id:'0',
+        ip:'192.168.1.4',
+        port:'5000',
+        name:'新的节点',
+        statecode:0
+      },
+      {
         id:'1',
-        url:'192.168.1.4:5000',
-        name:'新的节点'
+        ip:'192.168.14.34',
+        port:'5000',
+        name:'新的节点',
+        statecode:1
       },
       {
         id:'2',
-        url:'192.168.14.34:5000',
-        name:'新的节点'
-      },
-      {
-        id:'3',
-        url:'192.168.14.34:5000',
-        name:'新的节点'
+        ip:'192.168.14.34',
+        port:'332',
+        name:'新的节点',
+        statecode:2
       }
     ],
-    nextID:4,
     modalVisible:false,
     newnodeNameInput:null,
     newnodeIPInput:null,
     newnodePortInput:null,
 
-    settingListOpen:false
+    settingOpen:false,
+    editidx:null
   }
+
+  
 
   /*Flatlist中渲染item的函数*/
   _renderItem=({item})=>{
-    return (
-      <View style={styles.nodeView}>
-        {/*整体框架*/}
-        <TouchableOpacity 
-          style={styles.nodeButton}
-          onPress={()=>{
-            this.props.navigation.navigate('ShowCharts',{ID:item.id,URL:item.url,Name:item.name})
-          }}
-        >
-          {/*节点网络状态图标*/}
-          <View style={styles.buttonIconView}>
-            <Entypo name='emoji-happy' size={30} color='green'/>
-          </View>
 
-          {/*节点信息*/}
-          <View style={styles.buttonNodeInfoView}>
-            <Text style={{fontSize:30}}>{item.name+item.id}</Text>
-            <Text style={{fontSize:18}}>{item.url}</Text>
-          </View>
-
-          {/*节点编辑图标*/}
-          <View style={styles.buttonIconView}>
-            <Feather name='edit' size={40} onPress={()=>{Alert.alert('你点击了编辑')}}/>
-          </View>
-
-          {/*节点删除图标*/}
-          <View style={styles.buttonIconView}>
-            <Feather name='trash-2' size={40} onPress={()=>{Alert.alert('你点击了删除')}}/>
-          </View>
-
-          {/*节点详细信息图标*/}
-          <View style={styles.buttonIconView}>
-            <Entypo name='chevron-thin-right' size={40} onPress={()=>{Alert.alert('你点击了详细信息')}}/>
-          </View>
-        </TouchableOpacity>
-      </View>
-    )
+    //如果是处于编辑状态
+    if(this.state.settingOpen){
+      return (
+        <View style={styles.nodeView}>
+          {/*整体框架*/}
+          <TouchableOpacity style={styles.nodeButton}>
+            {/*节点网络状态图标*/}
+            <View style={styles.buttonIconViewOpen}>
+              <Entypo name={emojiMap[item.statecode]} size={30} color={emojiColorMap[item.statecode]}/>
+            </View>
+  
+            {/*节点信息*/}
+            <View style={styles.buttonNodeInfoViewOpen}>
+              <Text style={{fontSize:30}}>{item.name+item.id}</Text>
+              <Text style={{fontSize:18}}>{item.ip+':'+item.port}</Text>
+            </View>
+  
+            {/*节点编辑图标*/}
+            <View style={styles.buttonIconViewOpen}>
+              <Feather name='edit' size={40} onPress={()=>{
+                this.setState({
+                  newnodeNameInput:this.state.nodes[item.id],
+                  newnodeIPInput:this.state.nodes[item.id],
+                  newnodePortInput:this.state.nodes[item.id],
+                  editidx:item.id
+                })
+                this._setModalVisible(true)
+              }}/>
+            </View>
+  
+            {/*节点删除图标*/}
+            <View style={styles.buttonIconViewOpen}>
+              <Feather name='trash-2' size={40} onPress={()=>{this._deleteNode(parseInt(item.id))}}/>
+            </View>
+          </TouchableOpacity>
+        </View>
+      )
+    }
+    //如果处于一般状态
+    else{
+      return(
+        <View style={styles.nodeView}>
+          {/*整体框架*/}
+          <TouchableOpacity 
+            style={styles.nodeButton}
+            onPress={()=>{
+              this.props.navigation.navigate('ShowCharts',{ID:item.id,IP:item.ip,port:item.port,Name:item.name})
+            }}
+          >
+            {/*节点网络状态图标*/}
+            <View style={styles.buttonIconViewClose}>
+              <Entypo name={emojiMap[item.statecode]} size={30} color={emojiColorMap[item.statecode]}/>
+            </View>
+  
+            {/*节点信息*/}
+            <View style={styles.buttonNodeInfoViewClose}>
+              <Text style={{fontSize:30}}>{item.name+item.id}</Text>
+              <Text style={{fontSize:18}}>{item.ip+':'+item.port}</Text>
+            </View>
+  
+            {/*节点详细信息图标*/}
+            <View style={styles.buttonIconViewClose}>
+              <Entypo name='chevron-thin-right' size={40}/>
+            </View>
+          </TouchableOpacity>
+        </View>
+      )
+    }
   }
 
   /*在弹窗中按下确定后调用的函数*/
@@ -128,10 +138,10 @@ export default class NodeManagePage extends React.Component{
     else{
       //采用深拷贝方法，避免直接改变原state
       let newNodeArray=this.state.nodes.slice(0)
-      console.log(this.state.nextID.toString())
       newNodeArray.push({
-        id:this.state.nextID.toString(),
-        url:this.state.newnodeIPInput+':'+this.state.newnodePortInput,
+        id:newNodeArray.length.toString(),
+        ip:this.state.newnodeIPInput,
+        port:this.state.newnodePortInput,
         name:this.state.newnodeNameInput
       })
       this.setState({
@@ -141,15 +151,51 @@ export default class NodeManagePage extends React.Component{
         newnodeIPInput:null,
         newnodePortInput:null
       })
-      //更新下一个id
-      let newNextID=this.state.nextID+1
-      this.setState({nextID:newNextID})
     }
   }
 
-  /*设置底部菜单打开状态的函数*/
-  _setSettingListOpen=(open)=>{
-    this.setState({settingListOpen:open})
+  //点击列表中删除图标后调用
+  _deleteNode=(idx)=>{
+    //深拷贝避免直接改变原state
+    let newNodeArray=this.state.nodes.slice(0)
+    newNodeArray.splice(idx,1)
+    //删除某个元素后从idx索引开始向后遍历，将其后每个节点的index都减1
+    for(let i=idx;i<newNodeArray.length;i++){
+      newNodeArray[i].id=i.toString()
+    }
+    this.setState({
+      nodes:newNodeArray
+    })
+  }
+
+  _editNode=()=>{
+    //对输入进行判断
+    if(this.state.newnodeNameInput==null){Alert.alert('节点名称不能为空!')}
+    else if(this.state.newnodeIPInput==null){Alert.alert('节点IP地址不能为空!')}
+    else if(this.state.newnodePortInput==null){Alert.alert('节点端口不能为空!')}
+    else{
+      //采用深拷贝方法，避免直接改变原state
+      let newNodeArray=this.state.nodes.slice(0)
+      newNodeArray[this.state.editidx]={
+        id:newNodeArray.length.toString(),
+        ip:this.state.newnodeIPInput,
+        port:this.state.newnodePortInput,
+        name:this.state.newnodeNameInput
+      }
+      this.setState({
+        nodes:newNodeArray,
+        modalVisible:false,
+        newnodeNameInput:null,
+        newnodeIPInput:null,
+        newnodePortInput:null,
+        editidx:null
+      })
+    }
+  }
+
+  /*反转当前编辑状态*/
+  _reverseSettingOpen=()=>{
+    this.setState({settingOpen:!this.state.settingOpen})
   }
 
   /*设置弹窗可见性的函数*/
@@ -168,11 +214,15 @@ export default class NodeManagePage extends React.Component{
         />
         
         {/*底部菜单组件*/}
-        <SettingList 
-          open={this.state.settingListOpen}  
-          _setSettingListOpen={this._setSettingListOpen}
-          _setModalVisible={this._setModalVisible}
-        />
+        <View style={styles.settingListButtonView }>
+            <TouchableOpacity style={styles.bottomButton} onPress={()=>{this._setModalVisible(true)}}>
+              <Icon name="ios-add-circle-outline" size={50} color='white'/>
+            </TouchableOpacity>
+
+            <TouchableOpacity style={styles.bottomButton} onPress={this._reverseSettingOpen}>
+              <Icon name="ios-settings" size={50} color='white'/>
+            </TouchableOpacity>
+        </View>
 
         {/*弹出框组件*/}
         <Modal
@@ -216,7 +266,11 @@ export default class NodeManagePage extends React.Component{
                 />
               </View>
 
-              <Button title="确定" onPress={this._addNewNode}/>
+              {/*当前弹窗有新增与编辑两种状态，需要进行判断*/}
+              <Button title="确定" onPress={()=>{
+                if(this.state.editidx==null)return this._addNewNode
+                else return this._editNode
+              }}/>
               <Button title="关闭" onPress={()=>{
                 this.setState({newnodeNameInput:null,newnodeIPInput:null,newnodePortInput:null,modalVisible:false})
               }}/>
@@ -229,6 +283,8 @@ export default class NodeManagePage extends React.Component{
   }
 }
 
+const emojiMap=['emoji-happy','emoji-neutral','emoji-sad']
+const emojiColorMap=['green','orange','red']
 
 
 const styles=StyleSheet.create({
@@ -245,23 +301,14 @@ const styles=StyleSheet.create({
     alignItems:'center',
     marginTop:Dimensions.get('window').width/42
   },
-  //最底部包裹设置按钮View的样式
-  bottomButtonView:{
-    flexDirection:'column',
-    justifyContent:'flex-start',
-    right:Dimensions.get('window').width/14,
-    top:Dimensions.get('window').height-Dimensions.get('window').width*(3/14+1/42),
-    height:Dimensions.get('window').width*(1/7+1/42),
-    position:'absolute'
-  },
-  //包裹添加、删除节点按钮View的样式
+  //包裹添加、编辑节点按钮View的样式
   settingListButtonView:{
     flexDirection:'column',
     justifyContent:'flex-start',
     right:Dimensions.get('window').width/14,
-    top:Dimensions.get('window').height-Dimensions.get('window').width*8/14,
+    top:Dimensions.get('window').height-Dimensions.get('window').width*6/14,
     position:'absolute',
-    height:Dimensions.get('window').width*7/14
+    height:Dimensions.get('window').width*5/14
   },
   //显示节点框的样式
   nodeView:{
@@ -270,31 +317,42 @@ const styles=StyleSheet.create({
   },
   //节点样式
   nodeButton:{
-    height:120,
-    width:Dimensions.get('window').width,
-    borderRadius:30,
+    height:Dimensions.get('window').width*0.382,
+    width:Dimensions.get('window').width*0.96,
+    borderRadius:Dimensions.get('window').width*0.1,
+    borderWidth:2,
     backgroundColor:'white',
     flexDirection:'row',
     justifyContent:'flex-start',
     alignItems:'center',
-    marginTop:10,
-
-    shadowColor:'gray',
-    shadowOffset:{height:1,width:1},
-    shadowOpacity:1,
-    shadowRadius:1
+    marginTop:Dimensions.get('window').height*0.015,
+    marginHorizontal:Dimensions.get('window').width*0.02
   },
-  //节点信息View样式，占屏幕宽40%
-  buttonNodeInfoView:{
+  //处于编辑状态下节点信息View样式
+  buttonNodeInfoViewOpen:{
     flexDirection:'column',
     alignItems:'flex-start',
-    width:Dimensions.get('window').width*0.4
+    width:Dimensions.get('window').width*0.46,
+    marginLeft:5
   },
-  //节点状态、编辑、删除、详细信息图标外围View样式，占屏幕宽15%
-  buttonIconView:{
+  //处于编辑状态下节点状态、编辑、删除、详细信息图标外围View样式
+  buttonIconViewOpen:{
     flexDirection:'row',
     justifyContent:'center',
     width:Dimensions.get('window').width*0.15
+  },
+  //处于正常状态下节点信息View样式
+  buttonNodeInfoViewClose:{
+    flexDirection:'column',
+    alignItems:'flex-start',
+    width:Dimensions.get('window').width*0.5,
+    marginLeft:5
+  },
+  //处于正常状态下节点状态、编辑、删除、详细信息图标外围View样式
+  buttonIconViewClose:{
+    flexDirection:'row',
+    justifyContent:'center',
+    width:Dimensions.get('window').width*0.2
   },
   //弹窗背景样式
   modalLayer: {
@@ -328,9 +386,5 @@ const styles=StyleSheet.create({
     width:Dimensions.get('window').height*0.4-100,
     height:32,
     marginHorizontal:15
-  },
-
-
-
-
+  }
 })

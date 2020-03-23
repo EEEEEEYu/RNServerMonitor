@@ -9,7 +9,8 @@ import {
   Dimensions,
   Alert,
   ImageBackground,
-  TouchableOpacity
+  TouchableOpacity,
+  Image
 } from 'react-native'
 import { TextInput } from 'react-native-gesture-handler'
 
@@ -91,6 +92,9 @@ export default class LoginPage extends React.Component{
       >
         {/*包裹整个输入区域的View*/}
         <SafeAreaView style={styles.allInputOuterlayer}>
+          <View style={styles.logoView}>
+            <Image source={require('../../assets/Logo/LabLogo.png')} style={styles.logoImage}/>
+          </View>
 
           {/*包裹输入邮箱密码区域的View*/}
           <View style={styles.inputOuterlayer}>
@@ -148,7 +152,15 @@ export default class LoginPage extends React.Component{
 }
 
 const styles=StyleSheet.create({
-  
+  logoView:{
+    flexDirection:'row',
+    justifyContent:'center',
+    paddingVertical:20
+  },
+  logoImage:{
+    width:Dimensions.get('window').width/3,
+    height:Dimensions.get('window').width/3*0.7
+  },
   inputOuterlayer:{
     flexDirection:'column',
     justifyContent:'center',
