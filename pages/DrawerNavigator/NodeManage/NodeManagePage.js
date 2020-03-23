@@ -241,7 +241,7 @@ export default class NodeManagePage extends React.Component{
           <TouchableOpacity 
             style={styles.nodeButton}
             onPress={()=>{
-              this.props.navigation.navigate('ShowCharts',{ID:item.id,IP:item.ip,port:item.port,Name:item.name})
+              this.props.navigation.navigate('ShowCharts',{ID:item.id,IP:item.ip,Port:item.port,Name:item.name})
             }}
           >
             {/*节点网络状态图标*/}
