@@ -18,6 +18,141 @@ import Feather from 'react-native-vector-icons/Feather'
 import Entypo from 'react-native-vector-icons/Entypo'
 
 
+/*
+  visible:boolean 
+  name:string
+  ip:string
+  port:string
+  confirmFunction:function
+  setName:function
+  setIp:function
+  setPort:fuction
+  setVisible:function
+*/
+//这是弹窗组件
+class PopModal extends React.Component{
+  render(){
+    //分别渲染为添加节点弹窗和编辑节点弹窗
+    if(this.props.editidx==null){
+      return(
+        <Modal
+          animationType="fade"
+          transparent={true}
+          visible={this.props.visible}
+          hardwareAccelerated={true}
+        >
+          <View style={styles.modalLayer}>
+            <View style={styles.modalContainer}>
+
+              <Text>新增节点</Text>
+
+              <View style={styles.newnodeView}>
+                <Text style={styles.inputNotification}>节点名称</Text>
+                <TextInput 
+                  style={styles.newnodeInput} 
+                  onChangeText={(text)=>{
+                    this.props.setName(text)
+                  }}
+                  defaultValue={this.props.name}
+                />
+              </View>
+
+              <View style={styles.newnodeView}>
+                <Text style={styles.inputNotification}>节点IP</Text>
+                <TextInput 
+                  style={styles.newnodeInput}
+                  onChangeText={(text)=>{
+                    this.props.setIP(text)
+                  }}
+                  defaultValue={this.props.ip}
+                />
+              </View>
+
+              <View style={styles.newnodeView}>
+                <Text style={styles.inputNotification}>节点端口号</Text>
+                <TextInput 
+                  style={styles.newnodeInput}
+                  onChangeText={(text)=>{
+                    this.props.setPort(text)
+                  }}
+                  defaultValue={this.props.port}
+                />
+              </View>
+
+              <Button title="确定" onPress={this.props.addNode}/>
+              <Button title="关闭" onPress={()=>{
+                this.props.setName(null)
+                this.props.setIP(null)
+                this.props.setPort(null)
+                this.props.setVisible(false)
+              }}/>
+            </View>
+          </View>
+        </Modal>
+      )
+    }
+    else{
+      return(
+        <Modal
+          animationType="fade"
+          transparent={true}
+          visible={this.props.visible}
+          hardwareAccelerated={true}
+        >
+          <View style={styles.modalLayer}>
+            <View style={styles.modalContainer}>
+
+              <Text>编辑节点</Text>
+
+              <View style={styles.newnodeView}>
+                <Text style={styles.inputNotification}>节点名称</Text>
+                <TextInput 
+                  style={styles.newnodeInput} 
+                  onChangeText={(text)=>{
+                    this.props.setName(text)
+                  }}
+                  defaultValue={this.props.name}
+                />
+              </View>
+
+              <View style={styles.newnodeView}>
+                <Text style={styles.inputNotification}>节点IP</Text>
+                <TextInput 
+                  style={styles.newnodeInput}
+                  onChangeText={(text)=>{
+                    this.props.setIP(text)
+                  }}
+                  defaultValue={this.props.ip}
+                />
+              </View>
+
+              <View style={styles.newnodeView}>
+                <Text style={styles.inputNotification}>节点端口号</Text>
+                <TextInput 
+                  style={styles.newnodeInput}
+                  onChangeText={(text)=>{
+                    this.props.setPort(text)
+                  }}
+                  defaultValue={this.props.port}
+                />
+              </View>
+
+              <Button title="确定" onPress={this.props.editNode}/>
+              <Button title="关闭" onPress={()=>{
+                this.props.setName(null)
+                this.props.setIP(null)
+                this.props.setPort(null)
+                this.props.setVisible(false)
+              }}/>
+            </View>
+          </View>
+        </Modal>
+      )
+    }
+  }
+}
+
+
 
 export default class NodeManagePage extends React.Component{
 
@@ -81,10 +216,10 @@ export default class NodeManagePage extends React.Component{
             <View style={styles.buttonIconViewOpen}>
               <Feather name='edit' size={40} onPress={()=>{
                 this.setState({
-                  newnodeNameInput:this.state.nodes[item.id],
-                  newnodeIPInput:this.state.nodes[item.id],
-                  newnodePortInput:this.state.nodes[item.id],
-                  editidx:item.id
+                  newnodeNameInput:this.state.nodes[parseInt(item.id)].name,
+                  newnodeIPInput:this.state.nodes[parseInt(item.id)].ip,
+                  newnodePortInput:this.state.nodes[parseInt(item.id)].port,
+                  editidx:parseInt(item.id)
                 })
                 this._setModalVisible(true)
               }}/>
@@ -142,7 +277,8 @@ export default class NodeManagePage extends React.Component{
         id:newNodeArray.length.toString(),
         ip:this.state.newnodeIPInput,
         port:this.state.newnodePortInput,
-        name:this.state.newnodeNameInput
+        name:this.state.newnodeNameInput,
+        statecode:2
       })
       this.setState({
         nodes:newNodeArray,
@@ -170,18 +306,21 @@ export default class NodeManagePage extends React.Component{
 
   _editNode=()=>{
     //对输入进行判断
-    if(this.state.newnodeNameInput==null){Alert.alert('节点名称不能为空!')}
+    if(this.state.newnodeNameInput==null){Alert.alert('编辑时节点名称不能为空!')}
     else if(this.state.newnodeIPInput==null){Alert.alert('节点IP地址不能为空!')}
     else if(this.state.newnodePortInput==null){Alert.alert('节点端口不能为空!')}
     else{
       //采用深拷贝方法，避免直接改变原state
       let newNodeArray=this.state.nodes.slice(0)
+      //edit函数中是修改对应位置的元素
       newNodeArray[this.state.editidx]={
-        id:newNodeArray.length.toString(),
+        id:newNodeArray[this.state.editidx].id,
         ip:this.state.newnodeIPInput,
         port:this.state.newnodePortInput,
-        name:this.state.newnodeNameInput
+        name:this.state.newnodeNameInput,
+        statecode:newNodeArray[this.state.editidx].statecode
       }
+      //退出edit函数后将editidx设置为null
       this.setState({
         nodes:newNodeArray,
         modalVisible:false,
@@ -201,6 +340,18 @@ export default class NodeManagePage extends React.Component{
   /*设置弹窗可见性的函数*/
   _setModalVisible=(visible)=>{
     this.setState({modalVisible:visible})
+  }
+
+  _setName=(name)=>{
+    this.setState({newnodeNameInput:name})
+  }
+
+  _setIP=(ip)=>{
+    this.setState({newnodeIPInput:ip})
+  }
+
+  _setPort=(port)=>{
+    this.setState({newnodePortInput:port})
   }
 
   render(){
@@ -224,59 +375,33 @@ export default class NodeManagePage extends React.Component{
             </TouchableOpacity>
         </View>
 
-        {/*弹出框组件*/}
-        <Modal
-          animationType="fade"
-          transparent={true}
+        
+        {
+          /*
+            visible:boolean 
+            name:string
+            ip:string
+            port:string
+            confirmFunction:function
+            setName:function
+            setIp:function
+            setPort:fuction
+            setVisible:function
+          */
+        }
+        <PopModal
           visible={this.state.modalVisible}
-          hardwareAccelerated={true}
-        >
-          <View style={styles.modalLayer}>
-            <View style={styles.modalContainer}>
-
-              <Text>新的节点</Text>
-
-              <View style={styles.newnodeView}>
-                <Text style={styles.inputNotification}>节点名称</Text>
-                <TextInput 
-                  style={styles.newnodeInput} 
-                  onChangeText={(text)=>{
-                    this.setState({newnodeNameInput:text})
-                  }}
-                />
-              </View>
-
-              <View style={styles.newnodeView}>
-                <Text style={styles.inputNotification}>节点IP</Text>
-                <TextInput 
-                  style={styles.newnodeInput}
-                  onChangeText={(text)=>{
-                    this.setState({newnodeIPInput:text})
-                  }}
-                />
-              </View>
-
-              <View style={styles.newnodeView}>
-                <Text style={styles.inputNotification}>节点端口号</Text>
-                <TextInput 
-                  style={styles.newnodeInput}
-                  onChangeText={(text)=>{
-                    this.setState({newnodePortInput:text})
-                  }}
-                />
-              </View>
-
-              {/*当前弹窗有新增与编辑两种状态，需要进行判断*/}
-              <Button title="确定" onPress={()=>{
-                if(this.state.editidx==null)return this._addNewNode
-                else return this._editNode
-              }}/>
-              <Button title="关闭" onPress={()=>{
-                this.setState({newnodeNameInput:null,newnodeIPInput:null,newnodePortInput:null,modalVisible:false})
-              }}/>
-            </View>
-          </View>
-        </Modal>
+          editidx={this.state.editidx}
+          name={this.state.newnodeNameInput}
+          ip={this.state.newnodeIPInput}
+          port={this.state.newnodePortInput}
+          setName={this._setName}
+          setIP={this._setIP}
+          setPort={this._setPort}
+          setVisible={this._setModalVisible}
+          addNode={this._addNewNode}
+          editNode={this._editNode}
+        />
 
       </View>
     )
