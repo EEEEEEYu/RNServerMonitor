@@ -201,20 +201,6 @@ export default class NodeManagePage extends React.Component{
       },
       {
         id:'3',
-        ip:'192.13.16.34',
-        port:'5000',
-        name:'新的节点',
-        statecode:0
-      },
-      {
-        id:'4',
-        ip:'12.13.16.34',
-        port:'5000',
-        name:'新的节点',
-        statecode:2
-      },
-      {
-        id:'5',
         ip:null,
         port:null,
         name:null,
@@ -413,7 +399,9 @@ export default class NodeManagePage extends React.Component{
         
         {/*底部菜单组件*/}
         <View style={styles.settingListButtonView }>
-            <TouchableOpacity style={styles.bottomButton} onPress={()=>{this._setModalVisible(true)}}>
+            <TouchableOpacity style={styles.bottomButton} onPress={()=>{
+              this._setModalVisible(true)
+            }}>
               <Icon name="ios-add" size={50} color='black'/>
             </TouchableOpacity>
 
