@@ -16,6 +16,7 @@ import { TextInput } from 'react-native-gesture-handler'
 import Icon from 'react-native-vector-icons/Ionicons'
 import Feather from 'react-native-vector-icons/Feather'
 import Entypo from 'react-native-vector-icons/Entypo'
+import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons'
 
 
 /*
@@ -44,10 +45,15 @@ class PopModal extends React.Component{
           <View style={styles.modalLayer}>
             <View style={styles.modalContainer}>
 
-              <Text>新增节点</Text>
+              <View style={styles.modalNotificationView}>
+                <Feather name='bookmark' size={35}/>
+                <Text style={{fontSize:30,marginLeft:10}}>添加节点</Text>
+              </View>
 
               <View style={styles.newnodeView}>
-                <Text style={styles.inputNotification}>节点名称</Text>
+                <View style={styles.inputNotificationView}>
+                  <Text style={styles.inputNotification}>节点名称</Text>
+                </View>
                 <TextInput 
                   style={styles.newnodeInput} 
                   onChangeText={(text)=>{
@@ -58,7 +64,9 @@ class PopModal extends React.Component{
               </View>
 
               <View style={styles.newnodeView}>
-                <Text style={styles.inputNotification}>节点IP</Text>
+                <View style={styles.inputNotificationView}>
+                  <Text style={styles.inputNotification}>节点IP</Text>
+                </View>
                 <TextInput 
                   style={styles.newnodeInput}
                   onChangeText={(text)=>{
@@ -69,7 +77,9 @@ class PopModal extends React.Component{
               </View>
 
               <View style={styles.newnodeView}>
-                <Text style={styles.inputNotification}>节点端口号</Text>
+                <View style={styles.inputNotificationView}>
+                  <Text style={styles.inputNotification}>节点端口号</Text>
+                </View>
                 <TextInput 
                   style={styles.newnodeInput}
                   onChangeText={(text)=>{
@@ -102,10 +112,15 @@ class PopModal extends React.Component{
           <View style={styles.modalLayer}>
             <View style={styles.modalContainer}>
 
-              <Text>编辑节点</Text>
+            <View style={styles.modalNotificationView}>
+                <SimpleLineIcons name='wrench' size={35}/>
+                <Text style={{fontSize:30,marginLeft:10}}>编辑节点</Text>
+              </View>
 
               <View style={styles.newnodeView}>
-                <Text style={styles.inputNotification}>节点名称</Text>
+                <View style={styles.inputNotificationView}>
+                  <Text style={styles.inputNotification}>节点名称</Text>
+                </View>
                 <TextInput 
                   style={styles.newnodeInput} 
                   onChangeText={(text)=>{
@@ -116,7 +131,9 @@ class PopModal extends React.Component{
               </View>
 
               <View style={styles.newnodeView}>
-                <Text style={styles.inputNotification}>节点IP</Text>
+                <View style={styles.inputNotificationView}>
+                  <Text style={styles.inputNotification}>节点IP</Text>
+                </View>
                 <TextInput 
                   style={styles.newnodeInput}
                   onChangeText={(text)=>{
@@ -127,7 +144,9 @@ class PopModal extends React.Component{
               </View>
 
               <View style={styles.newnodeView}>
-                <Text style={styles.inputNotification}>节点端口号</Text>
+                <View style={styles.inputNotificationView}>
+                  <Text style={styles.inputNotification}>节点端口号</Text>
+                </View>
                 <TextInput 
                   style={styles.newnodeInput}
                   onChangeText={(text)=>{
@@ -157,7 +176,7 @@ class PopModal extends React.Component{
 export default class NodeManagePage extends React.Component{
 
   state={
-    //添加状态码，0代表和节点正常通信，1代表手机未联网，2代表对应节点异常
+    //添加状态码，0代表和节点正常通信，1代表手机未联网，2代表对应节点异常，3代表填充的尾部部分
     nodes:[
       {
         id:'0',
@@ -179,6 +198,27 @@ export default class NodeManagePage extends React.Component{
         port:'332',
         name:'新的节点',
         statecode:2
+      },
+      {
+        id:'3',
+        ip:'192.13.16.34',
+        port:'5000',
+        name:'新的节点',
+        statecode:0
+      },
+      {
+        id:'4',
+        ip:'12.13.16.34',
+        port:'5000',
+        name:'新的节点',
+        statecode:2
+      },
+      {
+        id:'5',
+        ip:null,
+        port:null,
+        name:null,
+        statecode:3
       }
     ],
     modalVisible:false,
@@ -196,7 +236,7 @@ export default class NodeManagePage extends React.Component{
   _renderItem=({item})=>{
 
     //如果是处于编辑状态
-    if(this.state.settingOpen){
+    if(this.state.settingOpen&&item.statecode!=3){
       return (
         <View style={styles.nodeView}>
           {/*整体框架*/}
@@ -234,7 +274,7 @@ export default class NodeManagePage extends React.Component{
       )
     }
     //如果处于一般状态
-    else{
+    else if(!this.state.settingOpen&&item.statecode!=3){
       return(
         <View style={styles.nodeView}>
           {/*整体框架*/}
@@ -263,6 +303,12 @@ export default class NodeManagePage extends React.Component{
         </View>
       )
     }
+    else if(item.statecode==3){
+      return(
+        <View style={{height:300}}>
+        </View>
+      )
+    }
   }
 
   /*在弹窗中按下确定后调用的函数*/
@@ -273,7 +319,8 @@ export default class NodeManagePage extends React.Component{
     else{
       //采用深拷贝方法，避免直接改变原state
       let newNodeArray=this.state.nodes.slice(0)
-      newNodeArray.push({
+      //在数组末尾元素前插入元素，保证填充的尾部View能一直在尾部
+      newNodeArray.splice(newNodeArray.length-1,0,{
         id:newNodeArray.length.toString(),
         ip:this.state.newnodeIPInput,
         port:this.state.newnodePortInput,
@@ -488,28 +535,43 @@ const styles=StyleSheet.create({
   },
   //弹窗容器样式
   modalContainer: {
+    flexDirection:'column',
     height: Dimensions.get('window').height*0.4,
     backgroundColor: 'white',
-    justifyContent: 'center'
+    justifyContent: 'flex-end'
+  },
+  //表明当前是编辑还是新增提醒的外围View
+  modalNotificationView:{
+    flexDirection:'row',
+    justifyContent:'center',
+    alignItems:'center'
   },
   //包裹输入框和提示文字View的样式
   newnodeView:{
     flexDirection:'row',
-    justifyContent:'flex-start',
+    justifyContent:'flex-end',
     alignItems:'center',
     marginVertical:10
   },
+  inputNotificationView:{
+    flex:1,
+    flexDirection:'row',
+    justifyContent:'flex-start',
+    marginLeft:15
+  },
   //输入提示文字的样式
   inputNotification:{
-    marginHorizontal:10
+    fontSize:18
   },
   //弹窗输入框的样式
   newnodeInput:{
     borderWidth:2,
     borderColor:'black',
-    borderRadius:7,
+    borderRadius:8,
     width:Dimensions.get('window').height*0.4-100,
-    height:32,
-    marginHorizontal:15
+    height:40,
+    marginHorizontal:15,
+    fontSize:17,
+    alignContent:'center'
   }
 })
