@@ -34,74 +34,7 @@ import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons'
 class PopModal extends React.Component{
   render(){
     //分别渲染为添加节点弹窗和编辑节点弹窗
-    if(this.props.editidx==null){
-      return(
-        <Modal
-          animationType="fade"
-          transparent={true}
-          visible={this.props.visible}
-          hardwareAccelerated={true}
-        >
-          <View style={styles.modalLayer}>
-            <View style={styles.modalContainer}>
-
-              <View style={styles.modalNotificationView}>
-                <Feather name='bookmark' size={35}/>
-                <Text style={{fontSize:30,marginLeft:10}}>添加节点</Text>
-              </View>
-
-              <View style={styles.newnodeView}>
-                <View style={styles.inputNotificationView}>
-                  <Text style={styles.inputNotification}>节点名称</Text>
-                </View>
-                <TextInput 
-                  style={styles.newnodeInput} 
-                  onChangeText={(text)=>{
-                    this.props.setName(text)
-                  }}
-                  defaultValue={this.props.name}
-                />
-              </View>
-
-              <View style={styles.newnodeView}>
-                <View style={styles.inputNotificationView}>
-                  <Text style={styles.inputNotification}>节点IP</Text>
-                </View>
-                <TextInput 
-                  style={styles.newnodeInput}
-                  onChangeText={(text)=>{
-                    this.props.setIP(text)
-                  }}
-                  defaultValue={this.props.ip}
-                />
-              </View>
-
-              <View style={styles.newnodeView}>
-                <View style={styles.inputNotificationView}>
-                  <Text style={styles.inputNotification}>节点端口号</Text>
-                </View>
-                <TextInput 
-                  style={styles.newnodeInput}
-                  onChangeText={(text)=>{
-                    this.props.setPort(text)
-                  }}
-                  defaultValue={this.props.port}
-                />
-              </View>
-
-              <Button title="确定" onPress={this.props.addNode}/>
-              <Button title="关闭" onPress={()=>{
-                this.props.setName(null)
-                this.props.setIP(null)
-                this.props.setPort(null)
-                this.props.setVisible(false)
-              }}/>
-            </View>
-          </View>
-        </Modal>
-      )
-    }
-    else{
+    if(this.props.editidx!=null&&this.props.settingOpen){
       return(
         <Modal
           animationType="fade"
@@ -157,6 +90,73 @@ class PopModal extends React.Component{
               </View>
 
               <Button title="确定" onPress={this.props.editNode}/>
+              <Button title="关闭" onPress={()=>{
+                this.props.setName(null)
+                this.props.setIP(null)
+                this.props.setPort(null)
+                this.props.setVisible(false)
+              }}/>
+            </View>
+          </View>
+        </Modal>
+      )
+    }
+    else{
+      return(
+        <Modal
+          animationType="fade"
+          transparent={true}
+          visible={this.props.visible}
+          hardwareAccelerated={true}
+        >
+          <View style={styles.modalLayer}>
+            <View style={styles.modalContainer}>
+
+              <View style={styles.modalNotificationView}>
+                <Feather name='bookmark' size={35}/>
+                <Text style={{fontSize:30,marginLeft:10}}>添加节点</Text>
+              </View>
+
+              <View style={styles.newnodeView}>
+                <View style={styles.inputNotificationView}>
+                  <Text style={styles.inputNotification}>节点名称</Text>
+                </View>
+                <TextInput 
+                  style={styles.newnodeInput} 
+                  onChangeText={(text)=>{
+                    this.props.setName(text)
+                  }}
+                  defaultValue={this.props.name}
+                />
+              </View>
+
+              <View style={styles.newnodeView}>
+                <View style={styles.inputNotificationView}>
+                  <Text style={styles.inputNotification}>节点IP</Text>
+                </View>
+                <TextInput 
+                  style={styles.newnodeInput}
+                  onChangeText={(text)=>{
+                    this.props.setIP(text)
+                  }}
+                  defaultValue={this.props.ip}
+                />
+              </View>
+
+              <View style={styles.newnodeView}>
+                <View style={styles.inputNotificationView}>
+                  <Text style={styles.inputNotification}>节点端口号</Text>
+                </View>
+                <TextInput 
+                  style={styles.newnodeInput}
+                  onChangeText={(text)=>{
+                    this.props.setPort(text)
+                  }}
+                  defaultValue={this.props.port}
+                />
+              </View>
+
+              <Button title="确定" onPress={this.props.addNode}/>
               <Button title="关闭" onPress={()=>{
                 this.props.setName(null)
                 this.props.setIP(null)
@@ -307,12 +307,15 @@ export default class NodeManagePage extends React.Component{
       let newNodeArray=this.state.nodes.slice(0)
       //在数组末尾元素前插入元素，保证填充的尾部View能一直在尾部
       newNodeArray.splice(newNodeArray.length-1,0,{
-        id:newNodeArray.length.toString(),
+        id:(newNodeArray.length-1).toString(),
         ip:this.state.newnodeIPInput,
         port:this.state.newnodePortInput,
         name:this.state.newnodeNameInput,
         statecode:2
       })
+      //将更新填充在末尾的View索引
+      newNodeArray[newNodeArray.length-1].id=(newNodeArray.length-1).toString()
+      console.log(newNodeArray)
       this.setState({
         nodes:newNodeArray,
         modalVisible:false,
@@ -428,6 +431,7 @@ export default class NodeManagePage extends React.Component{
           visible={this.state.modalVisible}
           editidx={this.state.editidx}
           name={this.state.newnodeNameInput}
+          settingOpen={this.state.settingOpen}
           ip={this.state.newnodeIPInput}
           port={this.state.newnodePortInput}
           setName={this._setName}
