@@ -6,6 +6,7 @@ import {
 } from 'react-native'
 import Swiper from 'react-native-swiper'
 import CPUPage from './CPU/CPUPage'
+import GPUPage from './GPU/GPUPage'
 
 export default class ShowCharts extends React.Component{
 
@@ -15,10 +16,7 @@ export default class ShowCharts extends React.Component{
       <Swiper>
         <CPUPage {...this.props}/>
 
-        <View>
-          <Text>{this.props.route.params.Name+this.props.route.params.ID}</Text>
-          <Button title="返回" onPress={()=>this.props.navigation.goBack()}/>
-        </View>
+        <GPUPage {...this.props}/>
 
         <View>
           <Text>page3</Text>

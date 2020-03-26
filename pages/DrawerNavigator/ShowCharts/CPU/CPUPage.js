@@ -187,7 +187,8 @@ const styles=StyleSheet.create({
   cpuContentView:{
     flexDirection:'column',
     justifyContent:'flex-start',
-    backgroundColor:'rgba(134, 65, 244, 0.8)'
+    backgroundColor:'rgba(134, 65, 244, 0.8)',
+    flex:50
   },
   //每一行指标（2个）的View
   lineView:{
@@ -217,7 +218,7 @@ const styles=StyleSheet.create({
     fontSize:windowWidth*0.052,
     color:'white'
   },
-  //包裹数字的View，根据数字的值改变颜色
+  //包裹数字的View，根据数字的值改变颜色 
   numberView:{
     height:windowHeight*0.036,
     width:60,
