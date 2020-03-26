@@ -93,6 +93,9 @@ export default class GPUPage extends React.Component{
           <Text style={styles.rulerText}>0s</Text>
         </View>
 
+				{/*分割线*/}
+				<View style={{height:2,backgroundColor:'white'}}></View>
+
 				<View style={styles.gpuContentView}>
 
 					<View style={styles.overallInfoView}>
@@ -103,16 +106,25 @@ export default class GPUPage extends React.Component{
 
 						<View style={styles.overallListView}>
 							<View style={styles.overallListItemView}>
-								<Text>整体使用率</Text>
-								<Text>8.9%</Text>
+
+								<Text style={styles.overallListItemText}>总使用</Text>
+								<View style={styles.overallListItemNumberView}>
+									<Text style={styles.overallListItemNumber}>8.9%</Text>
+								</View>
+
 							</View>
 							<View style={styles.overallListItemView}>
-								<Text>整体显存使用率</Text>
-								<Text>89%</Text>
+								<Text style={styles.overallListItemText}>总显存</Text>
+								<View style={styles.overallListItemNumberView}>
+									<Text style={styles.overallListItemNumber}>89%</Text>
+								</View>
 							</View>
 						</View>
 
 					</View>
+
+					{/*分割线*/}
+					<View style={{height:2,backgroundColor:'white'}}></View>
 
 					<FlatList
 						data={this.state.individualInfo}
@@ -141,20 +153,24 @@ const styles=StyleSheet.create({
 	rulerView:{
 		flexDirection:'row',
 		justifyContent:'space-between',
-		alignItems:'center'
+		alignItems:'center',
+		backgroundColor:'rgba(134, 65, 244, 0.8)'
+	},
+	rulerText:{
+		color:'white'
 	},
 	//图表下方所有item的View
 	gpuContentView:{
 		flexDirection:'column',
 		justifyContent:'flex-start',
+		backgroundColor:'rgba(134, 65, 244, 0.8)',
 		flex:50
 	},
 	//头部整体信息的View
 	overallInfoView:{
 		height:windowHeight*0.15,
 		flexDirection:'row',
-		justifyContent:'flex-start',
-		backgroundColor:'red'
+		justifyContent:'flex-start'
 	},
 	//头部GPU图标的View
 	overallIconView:{
@@ -174,39 +190,82 @@ const styles=StyleSheet.create({
 		flexDirection:'row',
 		justifyContent:'center',
 		alignItems:'center',
-		flex:1,
-		backgroundColor:'orange'
+		flex:1
 	},
+	//"总使用"和"总显存"提示文字的样式
+	overallListItemText:{
+		fontSize:18,
+		color:'white'
+	},
+	//包裹"总使用"和"总显存"数字的View
+	overallListItemNumberView:{
+		flexDirection:'row',
+		justifyContent:'center',
+		alignItems:'center',
+		height:windowHeight*0.03,
+		width:windowHeight*0.06,
+		borderRadius:windowHeight*0.03,
+		backgroundColor:'green',
+		marginHorizontal:12
+	},
+	//"总使用"和"总显存"数字的样式
+	overallListItemNumber:{
+		fontSize:18,
+		color:'white'
+	},
+	//下方列表中单个GPU内容的样式
 	individualInfoView:{
 		flexDirection:'column',
 		height:windowHeight*0.15,
-		backgroundColor:'green'
+		borderRadius:30,
+		borderColor:'white',
+		borderWidth:2,
+		marginVertical:5,
+		marginHorizontal:5
 	},
+	//单个GPU内容中GPU名字的View
 	individualNameTextView:{
 		flexDirection:'row',
-		justifyContent:'flex-start'
+		justifyContent:'flex-start',
+		marginLeft:windowWidth*0.06,
+		marginTop:18
 	},
+	//单个GPU内容中GPU名字文字样式
 	individualNameText:{
 		fontSize:20,
 		color:'white'
 	},
+	//单个GPU硬件详细数值的View
 	individualDetailView:{
 		flexDirection:'row',
-		justifyContent:'space-evenly',
-		alignItems:'center'
+		justifyContent:'flex-start',
+		alignItems:'center',
+		marginLeft:windowWidth*0.06,
+		marginVertical:10
 	},
+	//单个GPU硬件详细数值的提示文字View
 	individualDetailTextView:{
 		flexDirection:'row',
 		justifyContent:'center',
 		alignItems:'center'
 	},
+	//单个GPU硬件详细数值的提示文字样式
 	individualDetailText:{
 		color:'white',
 		fontSize:20
 	},
+	//单个GPU硬件详细数值的数字View
 	individualDetailNumberView:{
-
+		flexDirection:'row',
+		justifyContent:'center',
+		alignItems:'center',
+		backgroundColor:'green',
+		height:windowHeight*0.03,
+		width:windowHeight*0.06,
+		borderRadius:windowHeight*0.03,
+		marginHorizontal:windowWidth*0.03
 	},
+	//单个GPU硬件详细数值的数字样式
 	individualDetailNumber:{
 		color:'white',
 		fontSize:18

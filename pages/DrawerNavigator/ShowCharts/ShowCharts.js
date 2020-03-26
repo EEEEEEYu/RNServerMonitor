@@ -7,6 +7,7 @@ import {
 import Swiper from 'react-native-swiper'
 import CPUPage from './CPU/CPUPage'
 import GPUPage from './GPU/GPUPage'
+import MemoryPage from './Memory/MemoryPage'
 
 export default class ShowCharts extends React.Component{
 
@@ -18,10 +19,7 @@ export default class ShowCharts extends React.Component{
 
         <GPUPage {...this.props}/>
 
-        <View>
-          <Text>page3</Text>
-          <Button title="返回" onPress={()=>this.props.navigation.goBack()}/>
-        </View>
+        <MemoryPage {...this.props}/>
       </Swiper>
     )
   }
