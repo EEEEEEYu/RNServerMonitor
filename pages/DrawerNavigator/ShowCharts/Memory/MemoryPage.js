@@ -57,21 +57,51 @@ export default class MemoryPage extends React.Component{
 
 				<View style={styles.memoryContentView}>
 
+					{/*分割线 */}
+					<View style={{height:2,backgroundColor:'white'}}></View>
+
 					<View style={styles.memoryLineView}>
 
 						<TouchableOpacity style={styles.memoryItemView}>
 							<Text>这里放入内存图标</Text>
 						</TouchableOpacity>
 
-						<MyItem notificationText='内存使用量' numberText='21.2%'/>
+						<MyItem notificationText='内存' numberText='21.2%'/>
 
 					</View>
 
 					<View style={styles.memoryLineView}>
 						
-						<MyItem notificationText='交换使用量' numberText='21.2%'/>
+						<MyItem notificationText='交换内存' numberText='21.2%'/>
 
-						<MyItem notificationText='cache使用量' numberText='21.2%'/>
+						<MyItem notificationText='cache' numberText='21.2%'/>
+
+					</View>
+
+					{/*分割线 */}
+					<View style={{height:2,backgroundColor:'white'}}></View>
+
+					<View style={styles.memoryLineView}>
+						
+						<MyItem notificationText='这里放网络图标' />
+
+						<MyItem notificationText='上传速度' numberText='21.2%'/>
+
+					</View>
+
+					<View style={styles.memoryLineView}>
+						
+						<MyItem notificationText='下载速度' numberText='21.2%'/>
+
+						<MyItem notificationText='上传丢包率' numberText='21.2%'/>
+
+					</View>
+
+					<View style={styles.memoryLineView}>
+						
+						<MyItem notificationText='下载丢包率' numberText='21.2%'/>
+
+						<MyItem notificationText='带宽' numberText='21.2%'/>
 
 					</View>
 
@@ -109,7 +139,7 @@ const styles=StyleSheet.create({
 	memoryLineView:{
 		flexDirection:'row',
 		justifyContent:'center',
-		height:windowHeight*0.12,
+		height:windowHeight*0.1,
 	},
 	memoryItemView:{
 		flex:1,
@@ -123,15 +153,25 @@ const styles=StyleSheet.create({
 		marginVertical:5
 	},
 	memoryItemTextView:{
-
+		flexDirection:'row',
+		justifyContent:'flex-start',
+		width:windowWidth*0.20,
+		marginLeft:windowWidth*0.05
 	},
 	memoryItemText:{
-
+		fontSize:18,
+		color:'white'
 	},
 	memoryItemNumberView:{
-
+		flexDirection:'row',
+		justifyContent:'center',
+		alignItems:'center',
+		width:windowWidth*0.16,
+		backgroundColor:'red',
+		borderRadius:windowWidth*0.08
 	},
 	memoryItemNumber:{
-
+		fontSize:18,
+		color:'white'
 	}
 })
