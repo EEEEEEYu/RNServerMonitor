@@ -41,10 +41,21 @@ const numberColorMap={
 
 export default class CPUPage extends React.Component{
   state={
-    data:[ 50, 10, 40, 95, 14, 24, 85, 91, 35, 53, 53, 24, 50, 20, 80 ],
-    usertime:60,
-    systime:20,
-    idletime:90
+    data:[
+      {'userPercentage': 1.362,'sysPercentage': 1.703,'idlePercentage': 96.768,'cpuPercent': 15.1,'1minLoadAvg': 11.75,'5minLoadAvg': 5.75,'15minLoadAvg': 3.5},
+      {'userPercentage': 1.362,'sysPercentage': 1.703,'idlePercentage': 96.768,'cpuPercent': 5.1,'1minLoadAvg': 11.75,'5minLoadAvg': 5.75,'15minLoadAvg': 3.5},
+      {'userPercentage': 1.362,'sysPercentage': 1.703,'idlePercentage': 96.768,'cpuPercent': 9.1,'1minLoadAvg': 11.75,'5minLoadAvg': 5.75,'15minLoadAvg': 3.5},
+      {'userPercentage': 1.362,'sysPercentage': 1.703,'idlePercentage': 96.768,'cpuPercent': 23.1,'1minLoadAvg': 11.75,'5minLoadAvg': 5.75,'15minLoadAvg': 3.5},
+      {'userPercentage': 1.362,'sysPercentage': 1.703,'idlePercentage': 96.768,'cpuPercent': 63.1,'1minLoadAvg': 11.75,'5minLoadAvg': 5.75,'15minLoadAvg': 3.5},
+      {'userPercentage': 1.362,'sysPercentage': 1.703,'idlePercentage': 96.768,'cpuPercent': 73.1,'1minLoadAvg': 11.75,'5minLoadAvg': 5.75,'15minLoadAvg': 3.5},
+      {'userPercentage': 1.362,'sysPercentage': 1.703,'idlePercentage': 96.768,'cpuPercent': 53.1,'1minLoadAvg': 11.75,'5minLoadAvg': 5.75,'15minLoadAvg': 3.5},
+      {'userPercentage': 1.362,'sysPercentage': 1.703,'idlePercentage': 96.768,'cpuPercent': 67.1,'1minLoadAvg': 11.75,'5minLoadAvg': 5.75,'15minLoadAvg': 3.5},
+      {'userPercentage': 1.362,'sysPercentage': 1.703,'idlePercentage': 96.768,'cpuPercent': 34.1,'1minLoadAvg': 11.75,'5minLoadAvg': 5.75,'15minLoadAvg': 3.5},
+      {'userPercentage': 1.362,'sysPercentage': 1.703,'idlePercentage': 96.768,'cpuPercent': 32.1,'1minLoadAvg': 11.75,'5minLoadAvg': 5.75,'15minLoadAvg': 3.5},
+      {'userPercentage': 1.362,'sysPercentage': 1.703,'idlePercentage': 96.768,'cpuPercent': 23.1,'1minLoadAvg': 11.75,'5minLoadAvg': 5.75,'15minLoadAvg': 3.5},
+      {'userPercentage': 1.362,'sysPercentage': 1.703,'idlePercentage': 96.768,'cpuPercent': 13.1,'1minLoadAvg': 11.75,'5minLoadAvg': 5.75,'15minLoadAvg': 3.5}
+    ],
+    displayName:'cpuPercent'
   }
   
 
@@ -62,21 +73,25 @@ export default class CPUPage extends React.Component{
     this.testtimer&&clearInterval(this.testtimer);
   }
 
+  _transformDisplayData=(data,name)=>{
+    let temp=new Array(data.length)
+    for(let i=0;i<data.length;i++){
+      temp[i]=data[i][name]
+    }
+    return temp
+  }
+
   render(){
-
-
-
     return(
       <View style={styles.layerView}>
         <Text>cpu page</Text>
         {/*图表显示区域*/}
         <AreaChart
           style={{ flex:40 }}
-          data={ this.state.data }
+          data={ this._transformDisplayData(this.state.data,this.state.displayName) }
           contentInset={{ top: 30,bottom:30 }}
           curve={ shape.curveNatural }
           svg={{ fill: 'rgba(134, 65, 244, 0.8)' }}
-                
         />
 
         {/*刻度尺 */}

@@ -49,7 +49,9 @@ class CollapsibleList extends React.Component{
           justifyContent:'center',
           alignItems:'center'
         }}>
-          <Text style={styles.procItemText}>{item.cpu}</Text>
+          <Text style={styles.procItemText}>
+            {this.props.notificationText.indexOf('CPU')!=-1?item.cpu:item.mem}
+          </Text>
         </View>
       </View>
     )
@@ -168,42 +170,55 @@ export default class ProcPage extends React.Component{
 
   state={
     CPUData:[
-      {
-        pid:2231,
-        user: "yhw",
-        cpu: 44.3,
-        name: "code"
-      },
-      {
-        pid:2221,
-        user: "yhw",
-        cpu: 2.3,
-        name: "Xorg"
-      },
-      {
-        pid:1647,
-        user: "yhw",
-        cpu: 1.9,
-        name: "gnome-shell"
-      }
+      {pid:2231,user: "yhw",cpu: 44.3,name: "code"},
+      {pid:2221,user: "yhw",cpu: 2.3,name: "Xorg"},
+      {pid:1647,user: "yhw",cpu: 1.9,name: "gnome-shell1234565354"}
     ],
-    MemData:[],
-    GPUData:[],
+    MemData:[
+      {pid:1,user:'yhw',mem:22.5,name:'code0'},
+      {pid:2,user:'yhw',mem:12.5,name:'code1'},
+      {pid:3,user:'yhw',mem:8.5,name:'code2'},
+      {pid:4,user:'yhw',mem:5.5,name:'code3'},
+      {pid:5,user:'yhw',mem:3.5,name:'code4'},
+      {pid:6,user:'yhw',mem:2.5,name:'code5'},
+      {pid:7,user:'yhw',mem:1.5,name:'code6'},
+    ],
+    GPUData:[
+      {pid:1231,user:'yhw',mem:17.5,name:'code0'},
+      {pid:3432,user:'yhw',mem:16.2,name:'code1'},
+      {pid:1235,user:'yhw',mem:13.2,name:'code2'},
+      {pid:5331,user:'yhw',mem:11.0,name:'code3'},
+      {pid:4523,user:'yhw',mem:9.9,name:'code4'},
+      {pid:5463,user:'yhw',mem:2.3,name:'code5'},
+    ],
     CPUOpen:true,
     GPUOpen:false,
     MemOpen:false
   }
 
+  //打开其中一个页面时，关闭其他两个页面
   _reverseCPUListOpen=()=>{
-    this.setState({CPUOpen:!this.state.CPUOpen})
+    this.setState({
+      CPUOpen:!this.state.CPUOpen,
+      GPUOpen:false,
+      MemOpen:false
+    })
   }
 
   _reverseGPUListOpen=()=>{
-    this.setState({GPUOpen:!this.state.GPUOpen})
+    this.setState({
+      GPUOpen:!this.state.GPUOpen,
+      CPUOpen:false,
+      MemOpen:false
+    })
   }
 
   _reverseMemListOpen=()=>{
-    this.setState({MemOpen:!this.state.MemOpen})
+    this.setState({
+      MemOpen:!this.state.MemOpen,
+      CPUOpen:false,
+      GPUOpen:false
+    })
   }
 
   render(){
@@ -293,7 +308,7 @@ const styles=StyleSheet.create({
   },
   //进程条目表头提示文字的样式
   itemHeaderText:{
-    fontSize:18
+    fontSize:windowWidth*0.05
   },
   //每一个进程的行View样式
   procRowView:{
@@ -311,6 +326,6 @@ const styles=StyleSheet.create({
     alignItems:'center'
   },
   procItemText:{
-    fontSize:18
+    fontSize:windowWidth*0.05
   }
 })
