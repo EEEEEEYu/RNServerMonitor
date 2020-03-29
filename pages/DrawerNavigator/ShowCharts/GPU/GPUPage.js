@@ -13,36 +13,35 @@ import * as shape from 'd3-shape'
 export default class GPUPage extends React.Component{
 
 	state={
-		data:[34,23,45,65,15,5,58,26,48,62,6],
-		overallUtilization:45,
-		overallMemory:96,
-		individualInfo:[
-			{
-				id:'0',
-				utilization:85,
-				memory:56,
-				temperature:60
-			},
-			{
-				id:'1',
-				utilization:50,
-				memory:60,
-				temperature:80
-			},
-			{
-				id:'2',
-				utilization:32,
-				memory:67,
-				temperature:45
-			},
-			{
-				id:'3',
-				utilization:55,
-				memory:74,
-				temperature:23
-			}
-		]
+		data:[
+			{"overallInfo": {"utilization": 35,"memoryUsed": 78},"individualInfo": {"0": {"hardwareInfo": {"utilization": 34,"memoryUsed": 65,"temperature": 45}},"1": {"hardwareInfo": {"utilization": 32,"memoryUsed": 12,"temperature": 87}}}},
+			{"overallInfo": {"utilization": 24,"memoryUsed": 45},"individualInfo": {"0": {"hardwareInfo": {"utilization": 43,"memoryUsed": 23,"temperature": 21}},"1": {"hardwareInfo": {"utilization": 17,"memoryUsed": 17,"temperature": 54}}}},
+			{"overallInfo": {"utilization": 46,"memoryUsed": 34},"individualInfo": {"0": {"hardwareInfo": {"utilization": 13,"memoryUsed": 65,"temperature": 54}},"1": {"hardwareInfo": {"utilization": 23,"memoryUsed": 19,"temperature": 87}}}},
+			{"overallInfo": {"utilization": 54,"memoryUsed": 54},"individualInfo": {"0": {"hardwareInfo": {"utilization": 56,"memoryUsed": 23,"temperature": 68}},"1": {"hardwareInfo": {"utilization": 26,"memoryUsed": 31,"temperature": 68}}}},
+			{"overallInfo": {"utilization": 65,"memoryUsed": 35},"individualInfo": {"0": {"hardwareInfo": {"utilization": 34,"memoryUsed": 86,"temperature": 78}},"1": {"hardwareInfo": {"utilization": 56,"memoryUsed": 24,"temperature": 45}}}},
+			{"overallInfo": {"utilization": 78,"memoryUsed": 13},"individualInfo": {"0": {"hardwareInfo": {"utilization": 37,"memoryUsed": 34,"temperature": 78}},"1": {"hardwareInfo": {"utilization": 78,"memoryUsed": 21,"temperature": 78}}}},
+			{"overallInfo": {"utilization": 49,"memoryUsed": 12},"individualInfo": {"0": {"hardwareInfo": {"utilization": 85,"memoryUsed": 44,"temperature": 87}},"1": {"hardwareInfo": {"utilization": 45,"memoryUsed": 61,"temperature": 45}}}},
+			{"overallInfo": {"utilization": 23,"memoryUsed": 32},"individualInfo": {"0": {"hardwareInfo": {"utilization": 77,"memoryUsed": 53,"temperature": 54}},"1": {"hardwareInfo": {"utilization": 56,"memoryUsed": 39,"temperature": 12}}}},
+			{"overallInfo": {"utilization": 49,"memoryUsed": 52},"individualInfo": {"0": {"hardwareInfo": {"utilization": 51,"memoryUsed": 12,"temperature": 64}},"1": {"hardwareInfo": {"utilization": 45,"memoryUsed": 27,"temperature": 10}}}},
+			{"overallInfo": {"utilization": 65,"memoryUsed": 42},"individualInfo": {"0": {"hardwareInfo": {"utilization": 40,"memoryUsed": 34,"temperature": 60}},"1": {"hardwareInfo": {"utilization": 43,"memoryUsed": 11,"temperature": 29}}}}
+		],
+		displayName:'utilization',
+		displayID:-1
 	}
+
+	componentDidMount(){
+    this.testtimer=setInterval(()=>{
+      newArray=this.state.data.splice(0)
+      newArray.push(newArray[0])
+      newArray=newArray.splice(1,newArray.length)
+      this.setState({data:newArray})
+    },4000)
+  }
+
+
+  componentWillUnmount(){
+    this.testtimer&&clearInterval(this.testtimer);
+  }
 
 	_renderItem=({item})=>{
 		return(
@@ -53,34 +52,102 @@ export default class GPUPage extends React.Component{
 				</View>
 				
 				<View style={styles.individualDetailView}>
+
 					<Text style={styles.individualDetailText}>使用率</Text>
-					<View style={styles.individualDetailNumberView}>
-						<Text style={styles.individualDetailNumber}>{item.utilization}</Text>
+					<View style={{
+						flexDirection:'row',
+						justifyContent:'center',
+						alignItems:'center',
+						backgroundColor:item.utilization<25?'green':item.utilization<75?'orange':'red',
+						height:windowHeight*0.03,
+						width:windowWidth*0.14,
+						borderRadius:windowHeight*0.03,
+						marginHorizontal:windowWidth*0.02
+					}}>
+						<Text style={styles.individualDetailNumber}>{item.utilization+'%'}</Text>
 					</View>
+
 					<Text style={styles.individualDetailText}>显存</Text>
-					<View style={styles.individualDetailNumberView}>
-						<Text style={styles.individualDetailNumber}>{item.memory}</Text>
+					<View style={{
+						flexDirection:'row',
+						justifyContent:'center',
+						alignItems:'center',
+						backgroundColor:item.memoryUsed<25?'green':item.memoryUsed<75?'orange':'red',
+						height:windowHeight*0.03,
+						width:windowWidth*0.14,
+						borderRadius:windowHeight*0.03,
+						marginHorizontal:windowWidth*0.02
+					}}>
+						<Text style={styles.individualDetailNumber}>{item.memoryUsed+'%'}</Text>
 					</View>
+
 					<Text style={styles.individualDetailText}>温度</Text>
-					<View style={styles.individualDetailNumberView}>
-						<Text style={styles.individualDetailNumber}>{item.temperature}</Text>
+					<View style={{
+						flexDirection:'row',
+						justifyContent:'center',
+						alignItems:'center',
+						backgroundColor:item.temperature<50?'green':item.temperature<80?'orange':'red',
+						height:windowHeight*0.03,
+						width:windowWidth*0.14,
+						borderRadius:windowHeight*0.03,
+						marginHorizontal:windowWidth*0.02
+					}}>
+						<Text style={styles.individualDetailNumber}>{item.temperature+'℃'}</Text>
 					</View>
 				</View>
 			</TouchableOpacity>
 		)
 	}
 
+	_transformDisplayData=(data,displayName,ID)=>{
+		//ID为-1时，图表显示的是整体情况
+		if(ID==-1){
+			let temp=new Array(data.length)
+			for(let i=0;i<temp.length;i++){
+				temp[i]=data[i]['overallInfo'][displayName]
+			}
+			return temp
+		}
+		else{
+			let temp=new Array(data.length)
+			for(let i=0;i<temp.length;i++){
+				temp[i]=data[i]['individualInfo'][ID][displayName]
+			}
+			return temp
+		}
+	}
+
+	//传入数组最后一个item的individualInfo，返回数组化的单个GPU信息
+	_transformFlatListData=(data)=>{
+		let temp=new Array(data.length)
+		let i=0
+		for(var key in data){
+			temp[i]={
+				id:key,
+				utilization:data[key]['hardwareInfo']['utilization'],
+				memoryUsed:data[key]['hardwareInfo']['memoryUsed'],
+				temperature:data[key]['hardwareInfo']['temperature']
+			}
+			i+=1
+		}
+
+		return temp
+	}
+
   render(){
     return(
 			<View style={styles.layerView}>
-				<Text>GPU page</Text>
         {/*图表显示区域*/}
         <AreaChart
           style={{ flex:40 }}
-          data={ this.state.data }
+          data={ this._transformDisplayData(this.state.data,this.state.displayName,this.state.displayID) }
 					curve={ shape.curveBasis }
+					contentInset={{top:30,bottom:30}}
           svg={{ fill: 'rgba(134, 65, 244, 0.8)' }}   
         />
+
+				{/*分割线*/}
+				<View style={{height:2,backgroundColor:'white'}}></View>
 
 				{/*刻度尺 */}
         <View style={styles.rulerView}>
@@ -98,6 +165,7 @@ export default class GPUPage extends React.Component{
 
 				<View style={styles.gpuContentView}>
 
+					{/*刻度尺正下方的整体信息页面 */}
 					<View style={styles.overallInfoView}>
 
 						<View style={styles.overallIconView}>
@@ -105,20 +173,40 @@ export default class GPUPage extends React.Component{
 						</View>
 
 						<View style={styles.overallListView}>
-							<View style={styles.overallListItemView}>
+							<TouchableOpacity style={styles.overallListItemView} onPress={()=>{this.setState({displayName:'utilization',displayID:-1})}}>
 
-								<Text style={styles.overallListItemText}>总使用</Text>
-								<View style={styles.overallListItemNumberView}>
-									<Text style={styles.overallListItemNumber}>8.9%</Text>
+								<Text style={styles.individualDetailText}>总使用率</Text>
+								<View style={{
+									flexDirection:'row',
+									justifyContent:'center',
+									alignItems:'center',
+									backgroundColor:	this.state.data[this.state.data.length-1]['overallInfo']['utilization']<25?'green':
+																		this.state.data[this.state.data.length-1]['overallInfo']['utilization']<75?'orange':'red',
+									height:windowHeight*0.03,
+									width:windowWidth*0.14,
+									borderRadius:windowHeight*0.03,
+									marginHorizontal:windowWidth*0.02
+								}}>
+									<Text style={styles.individualDetailNumber}>{this.state.data[this.state.data.length-1]['overallInfo']['utilization']+'%'}</Text>
 								</View>
 
-							</View>
-							<View style={styles.overallListItemView}>
-								<Text style={styles.overallListItemText}>总显存</Text>
-								<View style={styles.overallListItemNumberView}>
-									<Text style={styles.overallListItemNumber}>89%</Text>
+							</TouchableOpacity>
+							<TouchableOpacity style={styles.overallListItemView} onPress={()=>{this.setState({displayName:'memoryUsed',displayID:-1})}}>
+								<Text style={styles.individualDetailText}>显存使用</Text>
+								<View style={{
+									flexDirection:'row',
+									justifyContent:'center',
+									alignItems:'center',
+									backgroundColor:	this.state.data[this.state.data.length-1]['overallInfo']['memoryUsed']<25?'green':
+																		this.state.data[this.state.data.length-1]['overallInfo']['memoryUsed']<75?'orange':'red',
+									height:windowHeight*0.03,
+									width:windowWidth*0.14,
+									borderRadius:windowHeight*0.03,
+									marginHorizontal:windowWidth*0.02
+								}}>
+									<Text style={styles.individualDetailNumber}>{this.state.data[this.state.data.length-1]['overallInfo']['memoryUsed']+'%'}</Text>
 								</View>
-							</View>
+							</TouchableOpacity>
 						</View>
 
 					</View>
@@ -126,12 +214,12 @@ export default class GPUPage extends React.Component{
 					{/*分割线*/}
 					<View style={{height:2,backgroundColor:'white'}}></View>
 
+					{/*下方的单个GPU信息列表*/}
 					<FlatList
-						data={this.state.individualInfo}
+						data={this._transformFlatListData(this.state.data[this.state.data.length-1]['individualInfo'])}
 						renderItem={this._renderItem}
 						keyExtractor={item=>item.id}
 					/>
-
 
 				</View>
 			</View>
@@ -192,47 +280,26 @@ const styles=StyleSheet.create({
 		alignItems:'center',
 		flex:1
 	},
-	//"总使用"和"总显存"提示文字的样式
-	overallListItemText:{
-		fontSize:18,
-		color:'white'
-	},
-	//包裹"总使用"和"总显存"数字的View
-	overallListItemNumberView:{
-		flexDirection:'row',
-		justifyContent:'center',
-		alignItems:'center',
-		height:windowHeight*0.03,
-		width:windowHeight*0.06,
-		borderRadius:windowHeight*0.03,
-		backgroundColor:'green',
-		marginHorizontal:12
-	},
-	//"总使用"和"总显存"数字的样式
-	overallListItemNumber:{
-		fontSize:18,
-		color:'white'
-	},
 	//下方列表中单个GPU内容的样式
 	individualInfoView:{
 		flexDirection:'column',
+		justifyContent:'space-evenly',
 		height:windowHeight*0.15,
 		borderRadius:30,
 		borderColor:'white',
 		borderWidth:2,
-		marginVertical:5,
+		marginVertical:8,
 		marginHorizontal:5
 	},
 	//单个GPU内容中GPU名字的View
 	individualNameTextView:{
 		flexDirection:'row',
 		justifyContent:'flex-start',
-		marginLeft:windowWidth*0.06,
-		marginTop:18
+		marginLeft:windowWidth*0.06
 	},
 	//单个GPU内容中GPU名字文字样式
 	individualNameText:{
-		fontSize:20,
+		fontSize:25,
 		color:'white'
 	},
 	//单个GPU硬件详细数值的View
@@ -240,8 +307,7 @@ const styles=StyleSheet.create({
 		flexDirection:'row',
 		justifyContent:'flex-start',
 		alignItems:'center',
-		marginLeft:windowWidth*0.06,
-		marginVertical:10
+		marginLeft:windowWidth*0.06
 	},
 	//单个GPU硬件详细数值的提示文字View
 	individualDetailTextView:{
@@ -254,20 +320,9 @@ const styles=StyleSheet.create({
 		color:'white',
 		fontSize:20
 	},
-	//单个GPU硬件详细数值的数字View
-	individualDetailNumberView:{
-		flexDirection:'row',
-		justifyContent:'center',
-		alignItems:'center',
-		backgroundColor:'green',
-		height:windowHeight*0.03,
-		width:windowHeight*0.06,
-		borderRadius:windowHeight*0.03,
-		marginHorizontal:windowWidth*0.03
-	},
 	//单个GPU硬件详细数值的数字样式
 	individualDetailNumber:{
 		color:'white',
-		fontSize:18
+		fontSize:windowWidth*0.042
 	}
 })

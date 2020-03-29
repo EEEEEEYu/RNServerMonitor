@@ -11,16 +11,18 @@ import {
 import {AreaChart,Grid} from 'react-native-svg-charts'
 import * as shape from 'd3-shape'
 
+
+//下方单个显示组件
 class MyItem extends React.Component{
   render(){
     return(
-      <TouchableOpacity style={styles.itemView}>
+      <TouchableOpacity style={styles.itemView} onPress={this.props.pressFunc}>
         <View style={styles.notificationTextView}>
           <Text style={styles.notificationText}>{this.props.notificationText}</Text>
         </View>
         <View style={{
           height:windowHeight*0.036,
-          width:60,
+          width:windowWidth*0.15,
           flexDirection:'row',
           justifyContent:'center',
           alignItems:'center',
@@ -34,26 +36,23 @@ class MyItem extends React.Component{
   }
 }
 
-const numberColorMap={
-
-}
 
 
 export default class CPUPage extends React.Component{
   state={
     data:[
-      {'userPercentage': 1.362,'sysPercentage': 1.703,'idlePercentage': 96.768,'cpuPercent': 15.1,'1minLoadAvg': 11.75,'5minLoadAvg': 5.75,'15minLoadAvg': 3.5},
-      {'userPercentage': 1.362,'sysPercentage': 1.703,'idlePercentage': 96.768,'cpuPercent': 5.1,'1minLoadAvg': 11.75,'5minLoadAvg': 5.75,'15minLoadAvg': 3.5},
-      {'userPercentage': 1.362,'sysPercentage': 1.703,'idlePercentage': 96.768,'cpuPercent': 9.1,'1minLoadAvg': 11.75,'5minLoadAvg': 5.75,'15minLoadAvg': 3.5},
-      {'userPercentage': 1.362,'sysPercentage': 1.703,'idlePercentage': 96.768,'cpuPercent': 23.1,'1minLoadAvg': 11.75,'5minLoadAvg': 5.75,'15minLoadAvg': 3.5},
-      {'userPercentage': 1.362,'sysPercentage': 1.703,'idlePercentage': 96.768,'cpuPercent': 63.1,'1minLoadAvg': 11.75,'5minLoadAvg': 5.75,'15minLoadAvg': 3.5},
-      {'userPercentage': 1.362,'sysPercentage': 1.703,'idlePercentage': 96.768,'cpuPercent': 73.1,'1minLoadAvg': 11.75,'5minLoadAvg': 5.75,'15minLoadAvg': 3.5},
-      {'userPercentage': 1.362,'sysPercentage': 1.703,'idlePercentage': 96.768,'cpuPercent': 53.1,'1minLoadAvg': 11.75,'5minLoadAvg': 5.75,'15minLoadAvg': 3.5},
-      {'userPercentage': 1.362,'sysPercentage': 1.703,'idlePercentage': 96.768,'cpuPercent': 67.1,'1minLoadAvg': 11.75,'5minLoadAvg': 5.75,'15minLoadAvg': 3.5},
-      {'userPercentage': 1.362,'sysPercentage': 1.703,'idlePercentage': 96.768,'cpuPercent': 34.1,'1minLoadAvg': 11.75,'5minLoadAvg': 5.75,'15minLoadAvg': 3.5},
-      {'userPercentage': 1.362,'sysPercentage': 1.703,'idlePercentage': 96.768,'cpuPercent': 32.1,'1minLoadAvg': 11.75,'5minLoadAvg': 5.75,'15minLoadAvg': 3.5},
-      {'userPercentage': 1.362,'sysPercentage': 1.703,'idlePercentage': 96.768,'cpuPercent': 23.1,'1minLoadAvg': 11.75,'5minLoadAvg': 5.75,'15minLoadAvg': 3.5},
-      {'userPercentage': 1.362,'sysPercentage': 1.703,'idlePercentage': 96.768,'cpuPercent': 13.1,'1minLoadAvg': 11.75,'5minLoadAvg': 5.75,'15minLoadAvg': 3.5}
+      {'userPercentage': 1.32,'sysPercentage': 1.7,'idlePercentage': 96.76,'cpuPercent': 15.1,'1minLoadAvg': 11.75,'5minLoadAvg': 5.75,'15minLoadAvg': 3.5},
+      {'userPercentage': 2.43,'sysPercentage': 0.7,'idlePercentage': 93.76,'cpuPercent': 5.1,'1minLoadAvg': 11.75,'5minLoadAvg': 5.75,'15minLoadAvg': 3.5},
+      {'userPercentage': 3.34,'sysPercentage': 0.7,'idlePercentage': 89.78,'cpuPercent': 9.1,'1minLoadAvg': 11.75,'5minLoadAvg': 5.75,'15minLoadAvg': 3.5},
+      {'userPercentage': 4.35,'sysPercentage': 2.7,'idlePercentage': 84.78,'cpuPercent': 23.1,'1minLoadAvg': 11.75,'5minLoadAvg': 5.75,'15minLoadAvg': 3.5},
+      {'userPercentage': 5.37,'sysPercentage': 2.7,'idlePercentage': 80.78,'cpuPercent': 63.1,'1minLoadAvg': 11.75,'5minLoadAvg': 5.75,'15minLoadAvg': 3.5},
+      {'userPercentage': 8.33,'sysPercentage': 3.7,'idlePercentage': 70.78,'cpuPercent': 73.1,'1minLoadAvg': 11.75,'5minLoadAvg': 5.75,'15minLoadAvg': 3.5},
+      {'userPercentage': 12.23,'sysPercentage': 3.7,'idlePercentage': 76.68,'cpuPercent': 53.1,'1minLoadAvg': 11.75,'5minLoadAvg': 5.75,'15minLoadAvg': 3.5},
+      {'userPercentage': 15.26,'sysPercentage': 4.7,'idlePercentage': 45.68,'cpuPercent': 67.1,'1minLoadAvg': 11.75,'5minLoadAvg': 5.75,'15minLoadAvg': 3.5},
+      {'userPercentage': 16.23,'sysPercentage': 4.7,'idlePercentage': 65.68,'cpuPercent': 34.1,'1minLoadAvg': 11.75,'5minLoadAvg': 5.75,'15minLoadAvg': 3.5},
+      {'userPercentage': 16.24,'sysPercentage': 5.7,'idlePercentage': 42.68,'cpuPercent': 32.1,'1minLoadAvg': 11.75,'5minLoadAvg': 5.75,'15minLoadAvg': 3.5},
+      {'userPercentage': 17.25,'sysPercentage': 5.7,'idlePercentage': 52.68,'cpuPercent': 23.1,'1minLoadAvg': 11.75,'5minLoadAvg': 5.75,'15minLoadAvg': 3.5},
+      {'userPercentage': 18.26,'sysPercentage': 6.7,'idlePercentage': 56.68,'cpuPercent': 13.1,'1minLoadAvg': 11.75,'5minLoadAvg': 5.75,'15minLoadAvg': 3.5}
     ],
     displayName:'cpuPercent'
   }
@@ -81,18 +80,20 @@ export default class CPUPage extends React.Component{
     return temp
   }
 
+
   render(){
     return(
       <View style={styles.layerView}>
-        <Text>cpu page</Text>
         {/*图表显示区域*/}
         <AreaChart
           style={{ flex:40 }}
           data={ this._transformDisplayData(this.state.data,this.state.displayName) }
-          contentInset={{ top: 30,bottom:30 }}
+          contentInset={{ top: 30,bottom:10 }}
           curve={ shape.curveNatural }
           svg={{ fill: 'rgba(134, 65, 244, 0.8)' }}
         />
+
+        <View style={{height:2,backgroundColor:'white'}}></View>
 
         {/*刻度尺 */}
         <View style={styles.rulerView}>
@@ -105,6 +106,8 @@ export default class CPUPage extends React.Component{
           <Text style={styles.rulerText}>0s</Text>
         </View>
 
+        <View style={{height:2,backgroundColor:'white'}}></View>
+
         <View style={styles.cpuContentView}>
 
           <View style={styles.lineView}>
@@ -115,8 +118,10 @@ export default class CPUPage extends React.Component{
 
             <MyItem 
               notificationText='使用率' 
-              numberText='5.5%' 
-              numberColor={this.state.usertime<25?'green':this.state.usertime<75?'orange':'red'}
+              numberText={this.state.data[this.state.data.length-1]['cpuPercent']+'%'}
+              numberColor={ this.state.data[this.state.data.length-1]['cpuPercent']<25?'green':
+                            this.state.data[this.state.data.length-1]['cpuPercent']<75?'orange':'red'}
+              pressFunc={()=>{this.setState({displayName:'cpuPercent'})}}
             />
 
 
@@ -126,14 +131,18 @@ export default class CPUPage extends React.Component{
 
             <MyItem 
               notificationText='用户时间' 
-              numberText='5.5%' 
-              numberColor={this.state.usertime<25?'green':this.state.usertime<75?'orange':'red'}
+              numberText={this.state.data[this.state.data.length-1]['userPercentage']+'%'}
+              numberColor={ this.state.data[this.state.data.length-1]<25?'green':
+                            this.state.data[this.state.data.length-1]<75?'orange':'red'}
+              pressFunc={()=>{this.setState({displayName:'userPercentage'})}}
             />
 
             <MyItem 
               notificationText='系统时间' 
-              numberText='3.5%'
-              numberColor={this.state.systime<25?'green':this.state.systime<75?'orange':'red'}
+              numberText={this.state.data[this.state.data.length-1]['sysPercentage']+'%'}
+              numberColor={ this.state.data[this.state.data.length-1]['sysPercentage']<25?'green':
+                            this.state.data[this.state.data.length-1]['sysPercentage']<75?'orange':'red'}
+              pressFunc={()=>{this.setState({displayName:'sysPercentage'})}}
             />
 
             
@@ -143,14 +152,18 @@ export default class CPUPage extends React.Component{
 
             <MyItem 
               notificationText='空闲时间' 
-              numberText='3.5%'
-              numberColor={this.state.idletime<25?'green':this.state.idletime<75?'orange':'red'}
+              numberText={this.state.data[this.state.data.length-1]['idlePercentage']+'%'}
+              numberColor={ this.state.data[this.state.data.length-1]['idlePercentage']<25?'green':
+                            this.state.data[this.state.data.length-1]['idlePercentage']<75?'orange':'red'}
+              pressFunc={()=>{this.setState({displayName:'idlePercentage'})}}
             />
 
             <MyItem 
               notificationText='1分钟内平均负载' 
-              numberText='3.5%'
-              numberColor={this.state.idletime<25?'green':this.state.idletime<75?'orange':'red'}
+              numberText={this.state.data[this.state.data.length-1]['1minLoadAvg']+'%'}
+              numberColor={ this.state.data[this.state.data.length-1]['1minLoadAvg']<25?'green':
+                            this.state.data[this.state.data.length-1]['1minLoadAvg']<75?'orange':'red'}
+              pressFunc={()=>{this.setState({displayName:'1minLoadAvg'})}}
             />
             
           </View>
@@ -159,14 +172,18 @@ export default class CPUPage extends React.Component{
 
             <MyItem 
               notificationText='5分钟内平均负载' 
-              numberText='3.5%'
-              numberColor={this.state.idletime<25?'green':this.state.idletime<75?'orange':'red'}
+              numberText={this.state.data[this.state.data.length-1]['5minLoadAvg']+'%'}
+              numberColor={ this.state.data[this.state.data.length-1]['5minLoadAvg']<25?'green':
+                            this.state.data[this.state.data.length-1]['5minLoadAvg']<75?'orange':'red'}
+              pressFunc={()=>{this.setState({displayName:'5minLoadAvg'})}}
             />
 
             <MyItem 
               notificationText='15分钟内平均负载' 
-              numberText='3.5%'
-              numberColor={this.state.idletime<25?'green':this.state.idletime<75?'orange':'red'}
+              numberText={this.state.data[this.state.data.length-1]['15minLoadAvg']+'%'}
+              numberColor={ this.state.data[this.state.data.length-1]['15minLoadAvg']<25?'green':
+                            this.state.data[this.state.data.length-1]['15minLoadAvg']<75?'orange':'red'}
+              pressFunc={()=>{this.setState({displayName:'15minLoadAvg'})}}
             />
             
           </View>
@@ -233,18 +250,8 @@ const styles=StyleSheet.create({
     fontSize:windowWidth*0.052,
     color:'white'
   },
-  //包裹数字的View，根据数字的值改变颜色 
-  numberView:{
-    height:windowHeight*0.036,
-    width:60,
-    flexDirection:'row',
-    justifyContent:'center',
-    alignItems:'center',
-    borderRadius:windowHeight*0.018
-  },
-
   numberText:{
-    fontSize:windowHeight*0.024,
+    fontSize:windowWidth*0.04,
     color:'white'
   }
 })

@@ -17,7 +17,7 @@ class CollapsibleList extends React.Component{
       <View style={styles.procRowView}>
 
         <View style={{
-          flex:15,
+          flex:18,
           flexDirection:'row',
           justifyContent:'center',
           alignItems:'center'
@@ -26,7 +26,7 @@ class CollapsibleList extends React.Component{
         </View>
 
         <View style={{
-          flex:30,
+          flex:27,
           flexDirection:'row',
           justifyContent:'center',
           alignItems:'center'
@@ -35,7 +35,7 @@ class CollapsibleList extends React.Component{
         </View>
 
         <View style={{
-          flex:40,
+          flex:37,
           flexDirection:'row',
           justifyContent:'center',
           alignItems:'center'
@@ -44,7 +44,7 @@ class CollapsibleList extends React.Component{
         </View>
 
         <View style={{
-          flex:15,
+          flex:18,
           flexDirection:'row',
           justifyContent:'center',
           alignItems:'center'
@@ -82,7 +82,7 @@ class CollapsibleList extends React.Component{
           <View style={styles.itemHeaderView}>
 
             <View style={{
-              flex:15,
+              flex:18,
               height:windowHeight*0.05,
               flexDirection:'row',
               justifyContent:'center',
@@ -94,7 +94,7 @@ class CollapsibleList extends React.Component{
             </View>
 
             <View style={{
-              flex:30,
+              flex:27,
               height:windowHeight*0.05,
               flexDirection:'row',
               justifyContent:'center',
@@ -107,7 +107,7 @@ class CollapsibleList extends React.Component{
             </View>
 
             <View style={{
-              flex:40,
+              flex:37,
               height:windowHeight*0.05,
               flexDirection:'row',
               justifyContent:'center',
@@ -118,7 +118,7 @@ class CollapsibleList extends React.Component{
             }}><Text style={styles.itemHeaderText}>{this.props.header[2]}</Text></View>
             
             <View style={{
-              flex:15,
+              flex:18,
               height:windowHeight*0.05,
               flexDirection:'row',
               justifyContent:'center',

@@ -33,7 +33,6 @@ export default class MemoryPage extends React.Component{
 	render(){
 		return(
 			<View style={styles.layerView}>
-				<Text>memory page</Text>
 				<AreaChart
           style={{ flex:40 }}
           data={ this.state.data }
@@ -41,6 +40,9 @@ export default class MemoryPage extends React.Component{
           curve={ shape.curveNatural }
           svg={{ fill: 'rgba(134, 65, 244, 0.8)' }}
         />
+
+				{/*分割线 */}
+				<View style={{height:2,backgroundColor:'white'}}></View>
 
 				{/*刻度尺 */}
         <View style={styles.rulerView}>
