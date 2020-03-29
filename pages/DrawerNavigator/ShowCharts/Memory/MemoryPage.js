@@ -12,7 +12,7 @@ import * as shape from 'd3-shape'
 class MyItem extends React.Component{
 	render(){
 		return(
-			<TouchableOpacity style={styles.memoryItemView}>
+			<TouchableOpacity style={styles.memoryItemView} onPress={()=>{this.props.pressFunc}}>
 				<View style={styles.memoryItemTextView}>
 					<Text style={styles.memoryItemText}>{this.props.notificationText}</Text>
 				</View>
@@ -27,7 +27,24 @@ class MyItem extends React.Component{
 export default class MemoryPage extends React.Component{
 
 	state={
-		data:[23,45,53,34,86,54,67,43,87,45,67,24,65]
+		data:[
+			{"memoryUsed":12,"swapUsed":12,"buff/cacheUsed":23},
+			{"memoryUsed":32,"swapUsed":23,"buff/cacheUsed":43},
+			{"memoryUsed":64,"swapUsed":11,"buff/cacheUsed":33},
+			{"memoryUsed":45,"swapUsed":7,"buff/cacheUsed":21},
+			{"memoryUsed":87,"swapUsed":25,"buff/cacheUsed":29},
+			{"memoryUsed":65,"swapUsed":19,"buff/cacheUsed":15},
+			{"memoryUsed":45,"swapUsed":14,"buff/cacheUsed":22}
+		],
+		displayName:'memoryUsed'
+	}
+
+	_transformDisplayData=(data,name)=>{
+		let temp=new Array(data.length)
+    for(let i=0;i<data.length;i++){
+      temp[i]=data[i][name]
+    }
+    return temp
 	}
 
 	render(){
@@ -35,7 +52,7 @@ export default class MemoryPage extends React.Component{
 			<View style={styles.layerView}>
 				<AreaChart
           style={{ flex:40 }}
-          data={ this.state.data }
+          data={ this._transformDisplayData(this.state.data,this.state.displayName) }
           contentInset={{ top: 30,bottom:30 }}
           curve={ shape.curveNatural }
           svg={{ fill: 'rgba(134, 65, 244, 0.8)' }}
@@ -103,7 +120,7 @@ export default class MemoryPage extends React.Component{
 						
 						<MyItem notificationText='下载丢包率' numberText='21.2%'/>
 
-						<MyItem notificationText='带宽' numberText='21.2%'/>
+						<MyItem notificationText='带宽使用' numberText='21.2%'/>
 
 					</View>
 
@@ -132,6 +149,7 @@ const styles=StyleSheet.create({
 	rulerText:{
 		color:'white'
 	},
+	//刻度尺以下的整体View
 	memoryContentView:{
 		flex:50,
 		flexDirection:'column',
@@ -157,11 +175,11 @@ const styles=StyleSheet.create({
 	memoryItemTextView:{
 		flexDirection:'row',
 		justifyContent:'flex-start',
-		width:windowWidth*0.20,
+		width:windowWidth*0.24,
 		marginLeft:windowWidth*0.05
 	},
 	memoryItemText:{
-		fontSize:18,
+		fontSize:windowWidth*0.043,
 		color:'white'
 	},
 	memoryItemNumberView:{
@@ -173,7 +191,7 @@ const styles=StyleSheet.create({
 		borderRadius:windowWidth*0.08
 	},
 	memoryItemNumber:{
-		fontSize:18,
+		fontSize:windowWidth*0.043,
 		color:'white'
 	}
 })

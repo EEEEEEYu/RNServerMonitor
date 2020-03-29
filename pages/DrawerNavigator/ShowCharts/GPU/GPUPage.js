@@ -36,16 +36,18 @@ export default class GPUPage extends React.Component{
       newArray=newArray.splice(1,newArray.length)
       this.setState({data:newArray})
     },4000)
-  }
+	}
+	
 
 
   componentWillUnmount(){
     this.testtimer&&clearInterval(this.testtimer);
   }
 
+	//渲染底部单个GPU信息组件的函数
 	_renderItem=({item})=>{
 		return(
-			<TouchableOpacity style={styles.individualInfoView}>
+			<View style={styles.individualInfoView}>
 				
 				<View style={styles.individualNameTextView}>
 					<Text style={styles.individualNameText}>Nvidia GTX 1080Ti</Text>
@@ -53,49 +55,68 @@ export default class GPUPage extends React.Component{
 				
 				<View style={styles.individualDetailView}>
 
-					<Text style={styles.individualDetailText}>使用率</Text>
-					<View style={{
-						flexDirection:'row',
-						justifyContent:'center',
-						alignItems:'center',
-						backgroundColor:item.utilization<25?'green':item.utilization<75?'orange':'red',
-						height:windowHeight*0.03,
-						width:windowWidth*0.14,
-						borderRadius:windowHeight*0.03,
-						marginHorizontal:windowWidth*0.02
-					}}>
-						<Text style={styles.individualDetailNumber}>{item.utilization+'%'}</Text>
-					</View>
+					{/*按下后，图表显示单个GPU的使用率*/}
+					<TouchableOpacity 
+						style={{flexDirection:'row',justifyContent:'center',alignItems:'center'}}
+						onPress={()=>{this.setState({displayName:'utilization',displayID:item.id})}}
+					>
 
-					<Text style={styles.individualDetailText}>显存</Text>
-					<View style={{
-						flexDirection:'row',
-						justifyContent:'center',
-						alignItems:'center',
-						backgroundColor:item.memoryUsed<25?'green':item.memoryUsed<75?'orange':'red',
-						height:windowHeight*0.03,
-						width:windowWidth*0.14,
-						borderRadius:windowHeight*0.03,
-						marginHorizontal:windowWidth*0.02
-					}}>
-						<Text style={styles.individualDetailNumber}>{item.memoryUsed+'%'}</Text>
-					</View>
+						<Text style={styles.individualDetailText}>使用率</Text>
+						<View style={{
+							flexDirection:'row',
+							justifyContent:'center',
+							alignItems:'center',
+							backgroundColor:item.utilization<25?'green':item.utilization<75?'orange':'red',
+							height:windowHeight*0.03,
+							width:windowWidth*0.14,
+							borderRadius:windowHeight*0.03,
+							marginHorizontal:windowWidth*0.02
+						}}>
+							<Text style={styles.individualDetailNumber}>{item.utilization+'%'}</Text>
+						</View>
+					</TouchableOpacity>
 
-					<Text style={styles.individualDetailText}>温度</Text>
-					<View style={{
-						flexDirection:'row',
-						justifyContent:'center',
-						alignItems:'center',
-						backgroundColor:item.temperature<50?'green':item.temperature<80?'orange':'red',
-						height:windowHeight*0.03,
-						width:windowWidth*0.14,
-						borderRadius:windowHeight*0.03,
-						marginHorizontal:windowWidth*0.02
-					}}>
-						<Text style={styles.individualDetailNumber}>{item.temperature+'℃'}</Text>
-					</View>
+					<TouchableOpacity 
+						style={{flexDirection:'row',justifyContent:'center',alignItems:'center'}}
+						onPress={()=>{this.setState({displayName:'memoryUsed',displayID:item.id})}}
+					>
+						<Text style={styles.individualDetailText}>显存</Text>
+						<View style={{
+							flexDirection:'row',
+							justifyContent:'center',
+							alignItems:'center',
+							backgroundColor:item.memoryUsed<25?'green':item.memoryUsed<75?'orange':'red',
+							height:windowHeight*0.03,
+							width:windowWidth*0.14,
+							borderRadius:windowHeight*0.03,
+							marginHorizontal:windowWidth*0.02
+						}}>
+							<Text style={styles.individualDetailNumber}>{item.memoryUsed+'%'}</Text>
+						</View>
+					</TouchableOpacity>
+
+					<TouchableOpacity 
+						style={{flexDirection:'row',justifyContent:'center',alignItems:'center'}}
+						onPress={()=>{this.setState({displayName:'temperature',displayID:item.id})}}
+					>
+						<Text style={styles.individualDetailText}>温度</Text>
+						<View style={{
+							flexDirection:'row',
+							justifyContent:'center',
+							alignItems:'center',
+							backgroundColor:item.temperature<50?'green':item.temperature<80?'orange':'red',
+							height:windowHeight*0.03,
+							width:windowWidth*0.14,
+							borderRadius:windowHeight*0.03,
+							marginHorizontal:windowWidth*0.02
+						}}>
+							<Text style={styles.individualDetailNumber}>{item.temperature+'℃'}</Text>
+						</View>
+					</TouchableOpacity>
+
+
 				</View>
-			</TouchableOpacity>
+			</View>
 		)
 	}
 
@@ -108,10 +129,11 @@ export default class GPUPage extends React.Component{
 			}
 			return temp
 		}
+		//ID大于-1时，图表显示的是单个GPU的某项具体指标
 		else{
 			let temp=new Array(data.length)
 			for(let i=0;i<temp.length;i++){
-				temp[i]=data[i]['individualInfo'][ID][displayName]
+				temp[i]=data[i]['individualInfo'][ID]['hardwareInfo'][displayName]
 			}
 			return temp
 		}
@@ -299,7 +321,7 @@ const styles=StyleSheet.create({
 	},
 	//单个GPU内容中GPU名字文字样式
 	individualNameText:{
-		fontSize:25,
+		fontSize:windowWidth*0.075,
 		color:'white'
 	},
 	//单个GPU硬件详细数值的View
@@ -318,11 +340,11 @@ const styles=StyleSheet.create({
 	//单个GPU硬件详细数值的提示文字样式
 	individualDetailText:{
 		color:'white',
-		fontSize:20
+		fontSize:windowWidth*0.048
 	},
 	//单个GPU硬件详细数值的数字样式
 	individualDetailNumber:{
 		color:'white',
-		fontSize:windowWidth*0.042
+		fontSize:windowWidth*0.045
 	}
 })
