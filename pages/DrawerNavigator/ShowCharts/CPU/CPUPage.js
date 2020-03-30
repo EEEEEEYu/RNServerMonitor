@@ -5,7 +5,8 @@ import {
   Button,
   Dimensions,
   StyleSheet,
-  TouchableOpacity
+  TouchableOpacity,
+  Image
 } from 'react-native'
 
 import {AreaChart,Grid} from 'react-native-svg-charts'
@@ -112,8 +113,11 @@ export default class CPUPage extends React.Component{
 
           <View style={styles.lineView}>
 
-            <TouchableOpacity style={styles.itemView}>
-              <Text>待显示的CPU图标</Text>
+            <TouchableOpacity style={styles.iconView} onPress={()=>{this.props.navigation.goBack()}}>
+              <Image 
+                source={require('../../../../assets/Icons/CPUIcon.png')} 
+                style={{height:windowWidth*0.21,width:windowWidth*0.21}}
+              />
             </TouchableOpacity>
 
             <MyItem 
@@ -239,6 +243,13 @@ const styles=StyleSheet.create({
     borderRadius:20,
     borderColor:'white',
     borderWidth:2
+  },
+  iconView:{
+    height:windowHeight*0.11,
+    width:windowWidth*0.49,
+    flexDirection:'row',
+    justifyContent:'center',
+    alignItems:'center'
   },
   notificationTextView:{
     flexDirection:'row',

@@ -16,7 +16,9 @@ export default class ShowCharts extends React.Component{
   render(){
 
     return(
-      <Swiper>
+      <Swiper
+        index={0}
+      >
         {/*CPU页面*/}
         <CPUPage {...this.props}/>
 

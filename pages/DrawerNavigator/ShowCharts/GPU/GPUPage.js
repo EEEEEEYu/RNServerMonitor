@@ -5,7 +5,8 @@ import {
 		StyleSheet,
 		Dimensions,
 		FlatList,
-		TouchableOpacity
+		TouchableOpacity,
+		Image
 } from 'react-native'
 import {AreaChart,Grid} from 'react-native-svg-charts'
 import * as shape from 'd3-shape'
@@ -190,9 +191,12 @@ export default class GPUPage extends React.Component{
 					{/*刻度尺正下方的整体信息页面 */}
 					<View style={styles.overallInfoView}>
 
-						<View style={styles.overallIconView}>
-							<Text>这里放入GPU图标</Text>
-						</View>
+						<TouchableOpacity style={styles.overallIconView} onPress={()=>{this.props.navigation.goBack()}}>
+							<Image 
+								source={require('../../../../assets/Icons/GPUIcon.png')} 
+								style={{height:windowWidth*0.27,width:windowWidth*0.27}}
+							/>
+						</TouchableOpacity>
 
 						<View style={styles.overallListView}>
 							<TouchableOpacity style={styles.overallListItemView} onPress={()=>{this.setState({displayName:'utilization',displayID:-1})}}>
