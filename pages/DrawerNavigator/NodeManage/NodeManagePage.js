@@ -171,41 +171,20 @@ class PopModal extends React.Component{
   }
 }
 
-
+/*
+需要双端保存的数据：
+只在服务器保存的数据：
+只在本地保存的数据：
+ */
 
 export default class NodeManagePage extends React.Component{
 
   state={
-    //添加状态码，0代表和节点正常通信，1代表手机未联网，2代表对应节点异常，3代表填充的尾部部分
+    //添加状态码，0代表和节点正常通信，1代表手机未联网，2代表对应节点异常
     nodes:[
-      {
-        id:'0',
-        ip:'192.168.1.4',
-        port:'5000',
-        name:'新的节点',
-        statecode:0
-      },
-      {
-        id:'1',
-        ip:'192.168.14.34',
-        port:'5000',
-        name:'新的节点',
-        statecode:1
-      },
-      {
-        id:'2',
-        ip:'192.168.14.34',
-        port:'332',
-        name:'新的节点',
-        statecode:2
-      },
-      {
-        id:'3',
-        ip:null,
-        port:null,
-        name:null,
-        statecode:3
-      }
+      {id:'0',ip:'192.168.1.4',port:'5000',name:'新的节点',statecode:0},
+      {id:'1',ip:'192.168.14.34',port:'5000',name:'新的节点',statecode:1},
+      {id:'2',ip:'192.168.14.34',port:'332',name:'新的节点',statecode:2}
     ],
     modalVisible:false,
     newnodeNameInput:null,
@@ -216,13 +195,16 @@ export default class NodeManagePage extends React.Component{
     editidx:null
   }
 
-  
+  //设置定时器，实时监测各个节点的状态
+  componentDidMount(){
+
+  }
 
   /*Flatlist中渲染item的函数*/
   _renderItem=({item})=>{
 
     //如果是处于编辑状态
-    if(this.state.settingOpen&&item.statecode!=3){
+    if(this.state.settingOpen){
       return (
         <View style={styles.nodeView}>
           {/*整体框架*/}
@@ -260,7 +242,7 @@ export default class NodeManagePage extends React.Component{
       )
     }
     //如果处于一般状态
-    else if(!this.state.settingOpen&&item.statecode!=3){
+    else{
       return(
         <View style={styles.nodeView}>
           {/*整体框架*/}
@@ -289,12 +271,6 @@ export default class NodeManagePage extends React.Component{
         </View>
       )
     }
-    else if(item.statecode==3){
-      return(
-        <View style={{height:300}}>
-        </View>
-      )
-    }
   }
 
   /*在弹窗中按下确定后调用的函数*/
@@ -306,16 +282,13 @@ export default class NodeManagePage extends React.Component{
       //采用深拷贝方法，避免直接改变原state
       let newNodeArray=this.state.nodes.slice(0)
       //在数组末尾元素前插入元素，保证填充的尾部View能一直在尾部
-      newNodeArray.splice(newNodeArray.length-1,0,{
-        id:(newNodeArray.length-1).toString(),
+      newNodeArray.push({
+        id:newNodeArray.length.toString(),
         ip:this.state.newnodeIPInput,
         port:this.state.newnodePortInput,
         name:this.state.newnodeNameInput,
         statecode:2
       })
-      //将更新填充在末尾的View索引
-      newNodeArray[newNodeArray.length-1].id=(newNodeArray.length-1).toString()
-      console.log(newNodeArray)
       this.setState({
         nodes:newNodeArray,
         modalVisible:false,
@@ -398,13 +371,18 @@ export default class NodeManagePage extends React.Component{
           renderItem={this._renderItem}
           style={styles.list}
           keyExtractor={item=>item.id}
+          ListFooterComponent={()=>{
+            return(<View style={{backgroundColor:'white',height:300}}/>)
+          }}
         />
         
         {/*底部菜单组件*/}
         <View style={styles.settingListButtonView }>
-            <TouchableOpacity style={styles.bottomButton} onPress={()=>{
-              this._setModalVisible(true)
-            }}>
+            <TouchableOpacity 
+              style={styles.bottomButton} 
+              //onPress={()=>{this._setModalVisible(true)}}
+              onPress={()=>{this.props.navigation.openDrawer()}}
+            >
               <Icon name="ios-add" size={50} color='black'/>
             </TouchableOpacity>
 

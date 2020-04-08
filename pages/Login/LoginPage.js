@@ -14,18 +14,15 @@ import {
 } from 'react-native'
 import { TextInput } from 'react-native-gesture-handler'
 
-
+/*登录页面中，用户的邮箱和密码双端存储*/
 
 export default class LoginPage extends React.Component{
-
 
   state={
     UserEmail:null,
     UserPassword:null
   }
 
-
-  
   //首先验证输入是否正确
   _login=()=>{
     if(this.state.UserEmail==null){
@@ -52,23 +49,44 @@ export default class LoginPage extends React.Component{
       .then((responseJSON)=>{
         //登陆失败
         if(responseJSON['status']==false){
-          Alert.alert('用户名或密码错误！')
+          Alert.alert(responseJSON['message'])
         }
         //登录成功，保存配置并且跳转到管理界面
         else{
+          //保存全局用户邮箱名，以供以后的操作使用
+          global.UserEmail=this.state.UserEmail
           //保存本地配置,如果usernode为空则不会被存储，需要在取node时加if判断
           global.storage.save({
             key:'loginConfiguration',
             data:{
-              Authority:responseJSON['Authority'],
-              BindEmail:responseJSON['BindEmail'],
-              NoticeByEmail:responseJSON['NoticeByEmail'],
-              UserNode:responseJSON['Nodes']
+              UserName:responseJSON['config']['UserName'],
+              UserLastLoginTime:responseJSON['config']['UserLastLoginTime'],
+              Authority:responseJSON['config']['Authority'],
+              BindEmail:responseJSON['config']['UserBindEmail'],
+              NoticeByEmail:responseJSON['config']['NoticeByEmail'],
+              CPUWarningThreshold:responseJSON['config']['CPUWarningThreshold'],
+              GPUWarningThreshold:responseJSON['config']['GPUWarningThreshold'],
+              GMemoryWarningThreshold:responseJSON['config']['GMemoryWarningThreshold'],
+              MemoryWarningThreshold:responseJSON['config']['MemoryWarningThreshold'],
+              LastingTime:responseJSON['config']['LastingTime'],
+              Nodes:responseJSON['nodes']
             }
           })
           .then(()=>{
             this.setState({UserEmail:null,UserPassword:null})
-            this.props.navigation.navigate('DrawerNavigator')
+            this.props.navigation.navigate('DrawerNavigator',{
+              UserName:responseJSON['config']['UserName'],
+              UserLastLoginTime:responseJSON['config']['UserLastLoginTime'],
+              Authority:responseJSON['config']['Authority'],
+              BindEmail:responseJSON['config']['UserBindEmail'],
+              NoticeByEmail:responseJSON['config']['NoticeByEmail'],
+              CPUWarningThreshold:responseJSON['config']['CPUWarningThreshold'],
+              GPUWarningThreshold:responseJSON['config']['GPUWarningThreshold'],
+              GMemoryWarningThreshold:responseJSON['config']['GMemoryWarningThreshold'],
+              MemoryWarningThreshold:responseJSON['config']['MemoryWarningThreshold'],
+              LastingTime:responseJSON['config']['LastingTime'],
+              Nodes:responseJSON['nodes']
+            })
           })
         }
       })
@@ -140,7 +158,7 @@ export default class LoginPage extends React.Component{
 
             {/*包裹注册按钮区域的View*/}
             <View style={styles.buttonView}>
-              <TouchableOpacity onPress={this._testlogin}>
+              <TouchableOpacity onPress={this._login}>
                 <Text style={styles.buttonText}>登 录</Text>
               </TouchableOpacity>
             </View>

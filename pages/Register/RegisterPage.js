@@ -56,7 +56,7 @@ export default class RegisterPage extends React.Component{
       })
       .then((response)=>response.json())
       .then((responseJSON)=>{
-        console.log(responseJSON)
+        Alert.alert(responseJSON['message'])
       })
       .catch((error)=>{
         console.log(error)

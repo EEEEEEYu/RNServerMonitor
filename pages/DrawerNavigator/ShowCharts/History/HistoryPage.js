@@ -10,7 +10,10 @@ export default class HistoryPage extends React.Component{
   render(){
     return(
       <View style={styles.layerView}>
-        <Text>history page</Text>
+        <Text>{this.props.route.params.Name}</Text>
+        <Text>{this.props.route.params.ID}</Text>
+        <Text>{this.props.route.params.IP}</Text>
+        <Text>{this.props.route.params.Port}</Text>
       </View>
     )
   }

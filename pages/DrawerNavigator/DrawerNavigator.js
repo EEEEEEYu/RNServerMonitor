@@ -3,29 +3,58 @@ import {
   Button, 
   View,
   Text,
-  CheckBox,
   StyleSheet,
-  TouchableOpacity
+  TouchableOpacity,
+  Dimensions,
+  Switch,
+  TextInput,
+  Modal,
+  Alert
 } from 'react-native';
-import { createDrawerNavigator, DrawerContentScrollView, DrawerItemList, DrawerItem } from '@react-navigation/drawer';
+import { createDrawerNavigator, DrawerContentScrollView, DrawerItemList, DrawerItem,DrawerContent } from '@react-navigation/drawer';
 import { NavigationContainer} from '@react-navigation/native'
 import NodeManage from './NodeManage/NodeManagePage'
 import BindPhone from './BindPhone/BindPhonePage'
 import BindMail from './BindMail/BindMailPage'
 import ShowCharts from './ShowCharts/ShowCharts'
-import { Switch } from 'react-native-gesture-handler';
 
 const Drawer=createDrawerNavigator();
 
+/*
+需要双端保存的应用：用户是否通过邮箱提醒、用户通知邮箱、用户名
+只在服务器保存的数据：
+只在本地保存的数据：用户是否通过应用提醒
+*/
 
 export default class DrawerNavigator extends React.Component{
 
   state={
-    switchon2:false,
-    switchon3:false
+    emailSwitchOpen:false,
+    appSwitchOpen:false,
+    Authority:false
   }
 
-  
+  //组件加载完成后，获取路由参数和本地存储的<通过APP通知>，将其赋值给state
+  componentDidMount(){
+    global.storage.load({key:appSwitchState})
+    .then(ret=>{
+      this.setState({
+        emailSwitchOpen:this.props.route.params.NoticeByEmail,
+        Authority:this.props.route.params.Authority,
+        appSwitchOpen:ret.open
+      })
+    })
+    //如果没有获取到本地存储的<通过APP通知>，将其默认设置为false
+    .catch(err=>{
+      console.log(err)
+      this.setState({
+        emailSwitchOpen:this.props.route.params.NoticeByEmail,
+        Authority:this.props.route.params.Authority,
+        appSwitchOpen:false
+      })
+    })
+  }
+
   render(){
     return(
       <NavigationContainer>
@@ -34,32 +63,80 @@ export default class DrawerNavigator extends React.Component{
           initialRouteName='NodeManage'
           drawerContent={(props)=>
           <DrawerContentScrollView {...props}>
+
             {/*用户名标签*/}
-            <DrawerItem label="用户名" labelStyle={styles.labels}/>
+            <View style={styles.drawerLayer}>
+              
+              <View style={styles.usernameView}>
+                <Text style={styles.usernameText}>用户:</Text><Text style={styles.usernameText}>{this.props.route.params.UserName}</Text>
+              </View>
 
+              <TouchableOpacity style={styles.mailView} onPress={this._openModal}>
+                <Text style={styles.mailText}>通知邮箱:</Text>
+                <Text style={styles.mailText}>{this.props.route.params.BindEmail}</Text>
+              </TouchableOpacity>
 
-            <TouchableOpacity style={styles.mailOuterLayer}>
-              <Text style={styles.mailText}>已绑定邮箱:</Text>
-              <Text style={styles.mailText}>未绑定</Text>
-            </TouchableOpacity>
+              <View style={styles.notificationView}> 
+                <Text style={styles.notificationText}>邮箱通知</Text>
+                <Switch 
+                  value={this.state.emailSwitchOpen} 
+                  onValueChange={()=>{
+                    //每次改变开关状态时，同时在本地保存，但是邮件通知还需要网络通信
+                    fetch('http://192.168.1.4:5000/UserConfigure',{
+                      method:'POST',
+                      headers:{
+                        Accept:'application/json',
+                        'Content-Type':'application/json'
+                      },
+                      body:JSON.stringify({
+                        UserEmail:global.UserEmail,
+                        NoticeByEmail:this.state.emailSwitchOpen
+                      })
+                    })
+                    .then((response)=>response.json())
+                    .then((responseJSON)=>{
+                      if(responseJSON['status']){
+                        this.setState({emailSwitchOpen:!this.state.emailSwitchOpen})
+                        global.storage.save({
+                          key:'emailSwitchState',
+                          data:{open:this.state.emailSwitchOpen}
+                        })
+                      }
+                      else{
+                        Alert.alert('更新设置失败！请检查网络')
+                      }
+                    })
+                    .catch((error)=>{Alert.alert(error)})
+                  }} 
+                  style={{marginLeft:windowWidth*0.15}}
+                />
+              </View>
 
-            <View style={styles.switchOuterLayer}> 
-              <Text style={styles.switchText}>邮箱通知</Text>
-              <Switch value={this.state.switchon2} onValueChange={()=>{this.setState({switchon2:!this.state.switchon2})}}/>
+              <View style={styles.notificationView}>
+                <Text style={styles.notificationText}>应用通知</Text>
+                <Switch 
+                  value={this.state.appSwitchOpen} 
+                  onValueChange={()=>{
+                    //每次改变开关状态时，同时在本地保存
+                    this.setState({appSwitchOpen:!this.state.appSwitchOpen})
+                    global.storage.save({
+                      key:'appSwitchState',
+                      data:{open:this.state.appSwitchOpen}
+                    })
+                  }} 
+                  style={{marginLeft:windowWidth*0.15}}
+                />
+              </View> 
+
+              <TouchableOpacity style={styles.logoutView}>
+                <Text style={styles.logoutText}>退出登录</Text>
+              </TouchableOpacity>
+
             </View>
 
-            <View style={styles.switchOuterLayer}>
-              <Text style={styles.switchText}>应用通知</Text>
-              <Switch value={this.state.switchon3} onValueChange={()=>{this.setState({switchon3:!this.state.switchon3})}}/>
-            </View> 
 
-            <TouchableOpacity style={styles.logoutOuterLayer}>
-              <Text style={styles.logoutText}>退出登录</Text>
-            </TouchableOpacity>
-            
-
-          </DrawerContentScrollView> 
-          }
+          </DrawerContentScrollView>}
+          
         >
 
 
@@ -85,38 +162,55 @@ export default class DrawerNavigator extends React.Component{
   }
 }
 
+const windowWidth=Dimensions.get('window').width
+const windowHeight=Dimensions.get('window').height
+
 
 const styles=StyleSheet.create({
-  labels:{
-    fontSize:20
+  drawerLayer:{
+    flexDirection:'column',
+    justifyContent:'flex-start',
+    flex:1
   },
-  mailOuterLayer:{
+  usernameView:{
     flexDirection:'row',
-    justifyContent:'flex-start'
-  },
-  mailText:{
-    fontSize:20,
-    paddingVertical:20,
-    paddingLeft:15
-  },
-  switchText:{
-    fontSize:20,
-    paddingLeft:15,
-    paddingVertical:20
-  },
-  switchOuterLayer:{
-    flexDirection:'row',
-    justifyContent:'space-around'
-  },
-  logoutOuterLayer:{
-    backgroundColor:'red',
     justifyContent:'center',
     alignItems:'center',
-    borderRadius:10
+    height:windowHeight*0.1
+  },
+  usernameText:{
+    fontSize:windowWidth*0.08
+  },
+  mailView:{
+    flexDirection:'row',
+    justifyContent:'flex-start',
+    alignItems:'center',
+    height:windowHeight*0.08,
+    marginLeft:windowWidth*0.05
+  },
+  mailText:{
+    fontSize:windowWidth*0.05
+  },
+  notificationView:{
+    flexDirection:'row',
+    justifyContent:'flex-start',
+    alignItems:'center',
+    height:windowHeight*0.08,
+    marginLeft:windowWidth*0.05
+  },
+  notificationText:{
+    fontSize:windowWidth*0.05
+  },
+  logoutView:{
+    flexDirection:'row',
+    justifyContent:'center',
+    alignItems:'center',
+    backgroundColor:'red',
+    marginTop:windowHeight*0.66-windowWidth*0.119,
+    flex:1
   },
   logoutText:{
-    color:'white',
-    fontSize:20,
-    paddingVertical:15
+    fontSize:windowWidth*0.08,
+    color:'white'
   }
 })
