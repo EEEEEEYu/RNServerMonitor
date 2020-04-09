@@ -74,19 +74,7 @@ export default class LoginPage extends React.Component{
           })
           .then(()=>{
             this.setState({UserEmail:null,UserPassword:null})
-            this.props.navigation.navigate('DrawerNavigator',{
-              UserName:responseJSON['config']['UserName'],
-              UserLastLoginTime:responseJSON['config']['UserLastLoginTime'],
-              Authority:responseJSON['config']['Authority'],
-              BindEmail:responseJSON['config']['UserBindEmail'],
-              NoticeByEmail:responseJSON['config']['NoticeByEmail'],
-              CPUWarningThreshold:responseJSON['config']['CPUWarningThreshold'],
-              GPUWarningThreshold:responseJSON['config']['GPUWarningThreshold'],
-              GMemoryWarningThreshold:responseJSON['config']['GMemoryWarningThreshold'],
-              MemoryWarningThreshold:responseJSON['config']['MemoryWarningThreshold'],
-              LastingTime:responseJSON['config']['LastingTime'],
-              Nodes:responseJSON['nodes']
-            })
+            this.props.navigation.navigate('DrawerNavigator')
           })
         }
       })
@@ -217,7 +205,8 @@ const styles=StyleSheet.create({
     height:35,
     borderColor:'white',
     borderWidth:2,
-    borderRadius:10
+    borderRadius:10,
+    color:'white'
   },
   allInputOuterlayer:{
     justifyContent:'center',

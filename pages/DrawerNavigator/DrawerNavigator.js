@@ -30,29 +30,43 @@ export default class DrawerNavigator extends React.Component{
 
   state={
     emailSwitchOpen:false,
-    appSwitchOpen:false,
-    Authority:false
+    appSwitchOpen:false
   }
+
+  configuration=new Map();
+  
 
   //组件加载完成后，获取路由参数和本地存储的<通过APP通知>，将其赋值给state
   componentDidMount(){
-    global.storage.load({key:appSwitchState})
-    .then(ret=>{
-      this.setState({
-        emailSwitchOpen:this.props.route.params.NoticeByEmail,
-        Authority:this.props.route.params.Authority,
-        appSwitchOpen:ret.open
-      })
-    })
+    //获取本地存储的<通过APP通知>设置。该设置是唯一仅在本地保存的设置
+    global.storage.load({key:'appSwitchState'})
+    .then(ret=>{this.setState({appSwitchOpen:ret.open})})
     //如果没有获取到本地存储的<通过APP通知>，将其默认设置为false
-    .catch(err=>{
-      console.log(err)
-      this.setState({
-        emailSwitchOpen:this.props.route.params.NoticeByEmail,
-        Authority:this.props.route.params.Authority,
-        appSwitchOpen:false
-      })
+    .catch(err=>{this.setState({appSwitchOpen:false})})
+
+    //获取在登录成功后本地保存的用户其他设置
+    global.storage.load({key:'loginConfiguration'})
+    .then(ret=>{
+      console.log(ret)
+      this.configuration.set('Authority',ret.Authority)
+      this.configuration.set('BindEmail',ret.BindEmail)
+      this.configuration.set('CPUWarningThreshold',ret.CPUWarningThreshold)
+      this.configuration.set('GPUWarningThreshold',ret.GPUWarningThreshold)
+      this.configuration.set('GMemoryWarningThreshold',ret.GMemoryWarningThreshold)
+      this.configuration.set('MemoryWarningThreshold',ret.MemoryWarningThreshold)
+      this.configuration.set('UserLastLoginTime',ret.UserLastLoginTime)
+      this.configuration.set('UserName',ret.UserName)
+      this.configuration.set('Nodes',ret.Nodes)
+
+      if(ret.NoticeByEmail) this.setState({emailSwitchOpen:true})
     })
+    //如果没有获取到本地存储的用户设置则返回
+    .catch(err=>{
+      Alert.alert('获取用户设置失败！返回登录界面')
+      this.props.navigation.goBack()
+    })
+
+
   }
 
   render(){
@@ -68,12 +82,12 @@ export default class DrawerNavigator extends React.Component{
             <View style={styles.drawerLayer}>
               
               <View style={styles.usernameView}>
-                <Text style={styles.usernameText}>用户:</Text><Text style={styles.usernameText}>{this.props.route.params.UserName}</Text>
+                <Text style={styles.usernameText}>{this.configuration.get('Authority')?'管理员:':'用户:'}</Text><Text style={styles.usernameText}>{this.configuration.get('UserName')}</Text>
               </View>
 
               <TouchableOpacity style={styles.mailView} onPress={this._openModal}>
                 <Text style={styles.mailText}>通知邮箱:</Text>
-                <Text style={styles.mailText}>{this.props.route.params.BindEmail}</Text>
+                <Text style={styles.mailText}>{this.configuration.get('BindEmail')}</Text>
               </TouchableOpacity>
 
               <View style={styles.notificationView}> 
@@ -128,7 +142,7 @@ export default class DrawerNavigator extends React.Component{
                 />
               </View> 
 
-              <TouchableOpacity style={styles.logoutView}>
+              <TouchableOpacity style={styles.logoutView} onPress={()=>{this.props.navigation.goBack()}}>
                 <Text style={styles.logoutText}>退出登录</Text>
               </TouchableOpacity>
 

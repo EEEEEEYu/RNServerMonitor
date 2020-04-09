@@ -56,6 +56,12 @@ export default class RegisterPage extends React.Component{
       })
       .then((response)=>response.json())
       .then((responseJSON)=>{
+        this.setState({
+          UserName:null,
+          UserEmail:null,
+          UserPassword:null,
+          UserConfirmPassword:null
+        })
         Alert.alert(responseJSON['message'])
       })
       .catch((error)=>{
@@ -205,7 +211,8 @@ const styles=StyleSheet.create({
     height:35,
     borderColor:'white',
     borderWidth:2,
-    borderRadius:10
+    borderRadius:10,
+    color:'white'
   },
   switchView:{
     flexDirection:'row',
