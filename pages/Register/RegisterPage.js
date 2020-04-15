@@ -41,7 +41,7 @@ export default class RegisterPage extends React.Component{
       Alert.alert('两次输入的密码不一致！')
     }
     else{
-      fetch('http://192.168.1.4:5000/RegisterUser',{
+      fetch(global.ServerIPandPort+'/RegisterUser',{
         method:'POST',
         headers:{
           Accept:'application/json',

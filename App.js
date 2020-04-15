@@ -18,6 +18,7 @@ var storage=new Storage({
 })
 global.storage=storage
 global.UserEmail=''
+global.ServerIPandPort='http://192.168.1.4:5000'
 
 //应用的三个根页面，分别是登录、注册和抽屉导航页面
 const RootStack =createStackNavigator({

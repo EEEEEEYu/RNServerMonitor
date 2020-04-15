@@ -32,7 +32,7 @@ export default class LoginPage extends React.Component{
       Alert.alert('密码不能为空！')
     }
     else{
-      fetch('http://192.168.1.4:5000/Login',{
+      fetch(global.ServerIPandPort+'/Login',{
         method:'POST',
         headers:{
           Accept:'application/json',
@@ -64,11 +64,6 @@ export default class LoginPage extends React.Component{
               Authority:responseJSON['config']['Authority'],
               BindEmail:responseJSON['config']['UserBindEmail'],
               NoticeByEmail:responseJSON['config']['NoticeByEmail'],
-              CPUWarningThreshold:responseJSON['config']['CPUWarningThreshold'],
-              GPUWarningThreshold:responseJSON['config']['GPUWarningThreshold'],
-              GMemoryWarningThreshold:responseJSON['config']['GMemoryWarningThreshold'],
-              MemoryWarningThreshold:responseJSON['config']['MemoryWarningThreshold'],
-              LastingTime:responseJSON['config']['LastingTime'],
               Nodes:responseJSON['nodes']
             }
           })
@@ -146,7 +141,7 @@ export default class LoginPage extends React.Component{
 
             {/*包裹注册按钮区域的View*/}
             <View style={styles.buttonView}>
-              <TouchableOpacity onPress={this._login}>
+              <TouchableOpacity onPress={this._testlogin}>
                 <Text style={styles.buttonText}>登 录</Text>
               </TouchableOpacity>
             </View>

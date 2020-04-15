@@ -14,9 +14,10 @@ import {
 import { createDrawerNavigator, DrawerContentScrollView, DrawerItemList, DrawerItem,DrawerContent } from '@react-navigation/drawer';
 import { NavigationContainer} from '@react-navigation/native'
 import NodeManage from './NodeManage/NodeManagePage'
-import BindPhone from './BindPhone/BindPhonePage'
 import BindMail from './BindMail/BindMailPage'
 import ShowCharts from './ShowCharts/ShowCharts'
+import ConfigureNodes from './ConfigureNodes/ConfigureNodesPage'
+import ConfigureUser from './ConfigureUser/ConfigureUserPage'
 
 const Drawer=createDrawerNavigator();
 
@@ -25,7 +26,6 @@ const Drawer=createDrawerNavigator();
 只在服务器保存的数据：
 只在本地保存的数据：用户是否通过应用提醒
 */
-
 export default class DrawerNavigator extends React.Component{
 
   state={
@@ -44,21 +44,16 @@ export default class DrawerNavigator extends React.Component{
     //如果没有获取到本地存储的<通过APP通知>，将其默认设置为false
     .catch(err=>{this.setState({appSwitchOpen:false})})
 
-    //获取在登录成功后本地保存的用户其他设置
+    //加载在登录成功后本地保存的用户其他设置
     global.storage.load({key:'loginConfiguration'})
     .then(ret=>{
       console.log(ret)
+      this.configuration.set('UserName',ret.UserName)
+      this.configuration.set('UserLastLoginTime',ret.UserLastLoginTime)
       this.configuration.set('Authority',ret.Authority)
       this.configuration.set('BindEmail',ret.BindEmail)
-      this.configuration.set('CPUWarningThreshold',ret.CPUWarningThreshold)
-      this.configuration.set('GPUWarningThreshold',ret.GPUWarningThreshold)
-      this.configuration.set('GMemoryWarningThreshold',ret.GMemoryWarningThreshold)
-      this.configuration.set('MemoryWarningThreshold',ret.MemoryWarningThreshold)
-      this.configuration.set('UserLastLoginTime',ret.UserLastLoginTime)
-      this.configuration.set('UserName',ret.UserName)
-      this.configuration.set('Nodes',ret.Nodes)
-
       if(ret.NoticeByEmail) this.setState({emailSwitchOpen:true})
+      this.configuration.set('Nodes',ret.Nodes)
     })
     //如果没有获取到本地存储的用户设置则返回
     .catch(err=>{
@@ -85,7 +80,7 @@ export default class DrawerNavigator extends React.Component{
                 <Text style={styles.usernameText}>{this.configuration.get('Authority')?'管理员:':'用户:'}</Text><Text style={styles.usernameText}>{this.configuration.get('UserName')}</Text>
               </View>
 
-              <TouchableOpacity style={styles.mailView} onPress={this._openModal}>
+              <TouchableOpacity style={styles.mailView} onPress={()=>{props.navigation.jumpTo('BindMail')}}>
                 <Text style={styles.mailText}>通知邮箱:</Text>
                 <Text style={styles.mailText}>{this.configuration.get('BindEmail')}</Text>
               </TouchableOpacity>
@@ -142,25 +137,27 @@ export default class DrawerNavigator extends React.Component{
                 />
               </View> 
 
-              <TouchableOpacity style={styles.logoutView} onPress={()=>{this.props.navigation.goBack()}}>
+              <TouchableOpacity style={styles.mailView} onPress={()=>{props.navigation.jumpTo('ConfigureNodes')}}>
+                <Text style={styles.mailText}>配置节点</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity style={styles.mailView} onPress={()=>{props.navigation.jumpTo('ConfigureUser')}}>
+                <Text style={styles.mailText}>管理用户</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity style={styles.logoutView} onPress={()=>{props.navigation.goBack()}}>
                 <Text style={styles.logoutText}>退出登录</Text>
               </TouchableOpacity>
 
             </View>
 
-
           </DrawerContentScrollView>}
           
         >
 
-
           <Drawer.Screen
             name='NodeManage'
             component={NodeManage}
-          />
-          <Drawer.Screen
-            name='BindPhone'
-            component={BindPhone}
           />
           <Drawer.Screen
             name='BindMail'
@@ -169,6 +166,14 @@ export default class DrawerNavigator extends React.Component{
           <Drawer.Screen
             name='ShowCharts'
             component={ShowCharts}
+          />
+          <Drawer.Screen
+            name='ConfigureNodes'
+            component={ConfigureNodes}
+          />
+          <Drawer.Screen
+            name='ConfigureUser'
+            component={ConfigureUser}
           />
         </Drawer.Navigator>
       </NavigationContainer>
