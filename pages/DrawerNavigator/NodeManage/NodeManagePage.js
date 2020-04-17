@@ -180,11 +180,11 @@ class PopModal extends React.Component{
 export default class NodeManagePage extends React.Component{
 
   state={
-    //添加状态码，0代表和节点正常通信，1代表手机未联网，2代表对应节点异常
+    //添加状态码，0代表和节点正常通信，1代表节点有过载的数据，2代表对应节点异常，3代表手机未联网
     nodes:[
-      {id:'0',ip:'192.168.1.4',port:'5000',name:'新的节点',statecode:0},
-      {id:'1',ip:'192.168.14.34',port:'5000',name:'新的节点',statecode:1},
-      {id:'2',ip:'192.168.14.34',port:'332',name:'新的节点',statecode:2}
+      {id:'0',ip:'192.168.1.4',port:'5000',name:'新的节点',statecode:0,CPU:90,GPU:90,GMemory:90,Memory:90,overload:30,cooldown:180},
+      {id:'1',ip:'192.168.14.34',port:'5000',name:'新的节点',statecode:1,CPU:90,GPU:90,GMemory:90,Memory:90,overload:30,cooldown:180},
+      {id:'2',ip:'192.168.14.34',port:'332',name:'新的节点',statecode:2,CPU:90,GPU:90,GMemory:90,Memory:90,overload:30,cooldown:180}
     ],
     modalVisible:false,
     newnodeNameInput:null,
@@ -195,7 +195,9 @@ export default class NodeManagePage extends React.Component{
     editidx:null
   }
 
-  //设置定时器，实时监测各个节点的状态
+  /*1、设置定时器，实时监测各个节点的状态。
+    2、加载节点信息到state中
+  */
   componentDidMount(){
 
   }
@@ -425,8 +427,8 @@ export default class NodeManagePage extends React.Component{
   }
 }
 
-const emojiMap=['emoji-happy','emoji-neutral','emoji-sad']
-const emojiColorMap=['green','orange','red']
+const emojiMap=['emoji-happy','emoji-neutral','emoji-sad','emoji-neutral']
+const emojiColorMap=['green','orange','red','gray']
 
 
 const styles=StyleSheet.create({

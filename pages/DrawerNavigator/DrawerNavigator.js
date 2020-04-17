@@ -60,8 +60,18 @@ export default class DrawerNavigator extends React.Component{
       Alert.alert('获取用户设置失败！返回登录界面')
       this.props.navigation.goBack()
     })
+  }
 
+  //点击配置节点后调用的函数
+  _configureNodes=(props)=>{
+    if(!this.configuration.get('Authority')) Alert.alert('只有管理员才能配置各个节点！')
+    else props.navigation.jumpTo('ConfigureNodes')
+  }
 
+  //点击管理用户后调用的函数
+  _configureUsers=(props)=>{
+    if(!this.configuration.get('Authority')) Alert.alert('只有管理员才能管理各个用户！')
+    else props.navigation.jumpTo('ConfigureUser')
   }
 
   render(){
@@ -81,9 +91,12 @@ export default class DrawerNavigator extends React.Component{
               </View>
 
               <TouchableOpacity style={styles.mailView} onPress={()=>{props.navigation.jumpTo('BindMail')}}>
-                <Text style={styles.mailText}>通知邮箱:</Text>
                 <Text style={styles.mailText}>{this.configuration.get('BindEmail')}</Text>
               </TouchableOpacity>
+
+              <View style={styles.notificationView}>
+                <Text style={styles.notificationText}>上次登录:{this.configuration.get('UserLastLoginTime')}</Text>
+              </View>
 
               <View style={styles.notificationView}> 
                 <Text style={styles.notificationText}>邮箱通知</Text>
@@ -137,15 +150,15 @@ export default class DrawerNavigator extends React.Component{
                 />
               </View> 
 
-              <TouchableOpacity style={styles.mailView} onPress={()=>{props.navigation.jumpTo('ConfigureNodes')}}>
+              <TouchableOpacity style={styles.mailView} onPress={()=>{this._configureNodes(props)}}>
                 <Text style={styles.mailText}>配置节点</Text>
               </TouchableOpacity>
 
-              <TouchableOpacity style={styles.mailView} onPress={()=>{props.navigation.jumpTo('ConfigureUser')}}>
+              <TouchableOpacity style={styles.mailView} onPress={()=>{this._configureUsers(props)}}>
                 <Text style={styles.mailText}>管理用户</Text>
               </TouchableOpacity>
 
-              <TouchableOpacity style={styles.logoutView} onPress={()=>{props.navigation.goBack()}}>
+              <TouchableOpacity style={styles.logoutView} onPress={()=>{this.props.navigation.goBack()}}>
                 <Text style={styles.logoutText}>退出登录</Text>
               </TouchableOpacity>
 
@@ -224,12 +237,21 @@ const styles=StyleSheet.create({
     flexDirection:'row',
     justifyContent:'center',
     alignItems:'center',
-    backgroundColor:'red',
-    marginTop:windowHeight*0.66-windowWidth*0.119,
-    flex:1
+    backgroundColor:'red'
   },
   logoutText:{
     fontSize:windowWidth*0.08,
     color:'white'
+  },
+  //弹窗输入框的样式
+  newnodeInput:{
+    borderWidth:2,
+    borderColor:'black',
+    borderRadius:8,
+    width:Dimensions.get('window').height*0.4-100,
+    height:40,
+    marginHorizontal:15,
+    fontSize:17,
+    alignContent:'center'
   }
 })

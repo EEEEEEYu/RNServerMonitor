@@ -246,7 +246,7 @@ export default class ProcPage extends React.Component{
           touchFunc={this._reverseMemListOpen}
           notificationText='显存使用前十'
           data={this.state.GPUData}
-          header={['PID','所属用户','应用名','用量']}
+          header={['PID','所属用户','应用名','比例']}
         />
 
       </View>
