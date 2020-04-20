@@ -19,6 +19,11 @@ import ShowCharts from './ShowCharts/ShowCharts'
 import ConfigureNodes from './ConfigureNodes/ConfigureNodesPage'
 import ConfigureUser from './ConfigureUser/ConfigureUserPage'
 
+import Feather from 'react-native-vector-icons/Feather'
+import FontAwesome from 'react-native-vector-icons/FontAwesome'
+import AntDesign from 'react-native-vector-icons/AntDesign'
+import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons'
+
 const Drawer=createDrawerNavigator();
 
 /*
@@ -91,14 +96,17 @@ export default class DrawerNavigator extends React.Component{
               </View>
 
               <TouchableOpacity style={styles.mailView} onPress={()=>{props.navigation.jumpTo('BindMail')}}>
+                <AntDesign name='notification' size={25} style={{marginRight:8}}/>
                 <Text style={styles.mailText}>{this.configuration.get('BindEmail')}</Text>
               </TouchableOpacity>
 
               <View style={styles.notificationView}>
+                <Feather name='clock' size={25} style={{marginRight:8}}/>
                 <Text style={styles.notificationText}>上次登录:{this.configuration.get('UserLastLoginTime')}</Text>
               </View>
 
               <View style={styles.notificationView}> 
+                <FontAwesome name='bell-o' size={25} style={{marginRight:8}}/>
                 <Text style={styles.notificationText}>邮箱通知</Text>
                 <Switch 
                   value={this.state.emailSwitchOpen} 
@@ -135,6 +143,7 @@ export default class DrawerNavigator extends React.Component{
               </View>
 
               <View style={styles.notificationView}>
+                <FontAwesome name='bell-o' size={25} style={{marginRight:8}}/>
                 <Text style={styles.notificationText}>应用通知</Text>
                 <Switch 
                   value={this.state.appSwitchOpen} 
@@ -151,10 +160,12 @@ export default class DrawerNavigator extends React.Component{
               </View> 
 
               <TouchableOpacity style={styles.mailView} onPress={()=>{this._configureNodes(props)}}>
+                <SimpleLineIcons name='wrench' size={25} style={{marginRight:8}}/>
                 <Text style={styles.mailText}>配置节点</Text>
               </TouchableOpacity>
 
               <TouchableOpacity style={styles.mailView} onPress={()=>{this._configureUsers(props)}}>
+                <SimpleLineIcons name='wrench' size={25} style={{marginRight:8}}/>
                 <Text style={styles.mailText}>管理用户</Text>
               </TouchableOpacity>
 
