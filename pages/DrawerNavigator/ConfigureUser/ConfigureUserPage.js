@@ -28,21 +28,21 @@ export default class ConfigureUser extends React.Component{
       <View style={styles.userView}>
         
         <View style={styles.userHeaderView}>
-          <Text>{item.UserName}</Text>
-          <Text>{item.UserEmail}</Text>
+          <Text style={styles.userHeaderText}>{item.UserName}</Text>
+          <Text style={styles.userRowText}>{item.UserEmail}</Text>
         </View>
 
         <View style={styles.userRowView}> 
-          <Text>用户权限:</Text>
-          <Text>{item.Authority?'管理员':'用户'}</Text>
+          <Text style={styles.userRowText}>用户权限:</Text>
+          <Text style={styles.userRowText}>{item.Authority?'管理员':'用户'}</Text>
 
-          <Text>在线状态:</Text>
-          <Text>{item.UserState?'在线':'不在线'}</Text>
+          <Text style={styles.userRowText}>在线状态:</Text>
+          <Text style={styles.userRowText}>{item.UserState?'在线':'不在线'}</Text>
         </View>
 
         <View style={styles.userRowView}>
-          <Text>上次登录时间:</Text>
-    <     Text>{item.LastLoginTime}</Text>
+          <Text style={styles.userRowText}>上次登录时间:</Text>
+          <Text style={styles.userRowText}>{item.LastLoginTime}</Text>
         </View>
 
       </View>
@@ -82,24 +82,34 @@ const styles=StyleSheet.create({
     alignItems:'center'
   },
   userView:{
-    height:windowHeight*0.18,
+    height:windowHeight*0.14,
     width:windowWidth*0.96,
     flexDirection:'column',
-    justifyContent:'center',
+    justifyContent:'flex-start',
     alignItems:'center',
-    marginTop:windowHeight*0.05,
+    marginTop:windowHeight*0.02,
     borderColor:'black',
     borderWidth:2,
     borderRadius:windowWidth*0.08
   },
   userHeaderView:{
     flexDirection:'row',
-    justifyContent:'center'
+    justifyContent:'center',
+    alignItems:'flex-end'
+  },
+  userHeaderText:{
+    fontSize:windowHeight*0.04,
+    marginHorizontal:windowWidth*0.05
   },
   userRowView:{
     flexDirection:'row',
     justifyContent:'center',
     alignItems:'center'
+  },
+  userRowText:{
+    fontSize:windowWidth*0.04,
+    marginHorizontal:windowWidth*0.01,
+    marginTop:windowWidth*0.008
   },
   //包裹添加、编辑节点按钮View的样式
   settingListButtonView:{

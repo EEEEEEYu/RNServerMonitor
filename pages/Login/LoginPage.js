@@ -55,6 +55,10 @@ export default class LoginPage extends React.Component{
         else{
           //保存全局用户邮箱名，以供以后的操作使用
           global.UserEmail=this.state.UserEmail
+          global.storage.save({
+            key:'nodes',
+            data:responseJSON['nodes']
+          })
           //保存本地配置,如果usernode为空则不会被存储，需要在取node时加if判断
           global.storage.save({
             key:'loginConfiguration',
@@ -63,8 +67,7 @@ export default class LoginPage extends React.Component{
               UserLastLoginTime:responseJSON['config']['UserLastLoginTime'],
               Authority:responseJSON['config']['Authority'],
               BindEmail:responseJSON['config']['UserBindEmail'],
-              NoticeByEmail:responseJSON['config']['NoticeByEmail'],
-              Nodes:responseJSON['nodes']
+              NoticeByEmail:responseJSON['config']['NoticeByEmail']
             }
           })
           .then(()=>{
@@ -81,6 +84,7 @@ export default class LoginPage extends React.Component{
 
   //首先验证输入是否正确
   _testlogin=()=>{
+    global.UserEmail='468085999@qq.com'
     this.props.navigation.navigate('DrawerNavigator')
   }
 
